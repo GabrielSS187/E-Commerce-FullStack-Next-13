@@ -3,7 +3,7 @@ import { env } from "process";
 const configKnex: Record<string, any> = {
   development: {
     client: "pg",
-    connection: env.DATABASE_URL,
+    connection: env.DATABASE_URL_LOCAL,
     useNullAsDefault: true,
     searchPath: ["knex", "public"],
     migrations: {

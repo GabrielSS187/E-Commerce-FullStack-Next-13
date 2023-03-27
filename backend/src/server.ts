@@ -25,7 +25,7 @@ app.use(express.json());
 
 //* Definir o tempo de vida máximo das solicitações CORS
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.setHeader("Access-Control-Max-Age", "86400");
+  res.setHeader("Access-Control-Max-Age", "86400") //* 24h;
   next();
 });
 
@@ -35,7 +35,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-const PORT = 8000
+const PORT = 8000;
 const server = app.listen(process.env.PORT || PORT, () => {
    if (server) {
       const address = server.address() as AddressInfo;
