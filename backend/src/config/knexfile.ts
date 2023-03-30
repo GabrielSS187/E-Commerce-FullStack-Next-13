@@ -7,11 +7,11 @@ const configKnex: Record<string, any> = {
     useNullAsDefault: true,
     searchPath: ["knex", "public"],
     migrations: {
-      tableName: "knex_migrations_todo",
+      tableName: "knex_migrations_shopper",
       extension: "ts",
     },
     seeds: {
-      tableName: "knex_seeds_todo",
+      tableName: "knex_seeds_shopper",
       extension: "ts",
     },
     pool: {
