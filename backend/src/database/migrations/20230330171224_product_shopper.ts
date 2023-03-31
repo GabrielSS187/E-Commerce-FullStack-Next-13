@@ -5,7 +5,7 @@ export async function up(knex: Knex): Promise<void> {
     table.increments("id_product").primary();
     table.string("image_url").notNullable();
     table.string("name", 255).notNullable().unique();
-    table.float("value", 255).notNullable();
+    table.float("value").notNullable();
   })
 };
 
