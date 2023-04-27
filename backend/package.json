@@ -7,14 +7,6 @@
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
     "build": "tsup src",
-    "migrate:latest": "ts-node -r dotenv/config ./node_modules/knex/bin/cli.js --knexfile ./src/config/knexfile.ts migrate:latest --migrations-directory ../database/migrations",
-    "migrate:make": "ts-node -r dotenv/config ./node_modules/knex/bin/cli.js --knexfile ./src/config/knexfile.ts migrate:make --migrations-directory ../database/migrations",
-    "migrate:rollback": "ts-node -r dotenv/config ./node_modules/knex/bin/cli.js --knexfile ./src/config/knexfile.ts migrate:rollback --migrations-directory ../database/migrations",
-    "migrate:up": "ts-node -r dotenv/config ./node_modules/knex/bin/cli.js --knexfile ./src/config/knexfile.ts migrate:up --migrations-directory ../database/migrations",
-    "migrate:down": "ts-node -r dotenv/config ./node_modules/knex/bin/cli.js --knexfile ./src/config/knexfile.ts migrate:down --migrations-directory ../database/migrations",
-    "migrate:list": "ts-node -r dotenv/config ./node_modules/knex/bin/cli.js --knexfile ./src/config/knexfile.ts migrate:list --migrations-directory ../database/migrations",
-    "seed:make": "ts-node -r dotenv/config ./node_modules/knex/bin/cli.js --knexfile ./src/config/knexfile.ts seed:make --migrations-directory ../database/seeds",
-    "seed:run": "ts-node -r dotenv/config ./node_modules/knex/bin/cli.js --knexfile ./src/config/knexfile.ts seed:run --migrations-directory ../database/seeds",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
@@ -29,10 +21,10 @@
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/jsonwebtoken": "^9.0.1",
-    "@types/pg": "^8.6.6",
     "tsup": "^6.7.0",
     "tsx": "^3.12.6",
-    "typescript": "^5.0.2"
+    "typescript": "^5.0.2",
+    "vitest": "^0.30.1"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -41,8 +33,7 @@
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
     "jsonwebtoken": "^9.0.0",
-    "knex": "^2.4.2",
-    "pg": "^8.10.0",
+    "mongoose": "^7.1.0",
     "zod": "^3.21.4"
   }
 }
