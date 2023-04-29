@@ -1,8 +1,8 @@
-type IdMongoDB = {
+type TIdMongoDB = {
 	_id: string;
 };
 
-export type CreateUserDTO = {
+export type TCreateUserDTO = {
 	photo_url: string;
 	name: string;
 	email: string;
@@ -10,7 +10,7 @@ export type CreateUserDTO = {
 	role: "normal" | "admin";
 };
 
-export type UserMoreInfoDTO = {
+export type TUserMoreInfoDTO = {
 	userId: string;
 	phone: string;
 	zipCode: string;
@@ -20,7 +20,7 @@ export type UserMoreInfoDTO = {
 	country: string;
 };
 
-export type UserExitDataDTO = {
-	_id: IdMongoDB;
-	userMoreInfo: IdMongoDB & UserMoreInfoDTO;
-} & CreateUserDTO;
+export type TUserExitDataDTO = {
+	_id: TIdMongoDB;
+	userMoreInfo: TIdMongoDB & TUserMoreInfoDTO;
+} & TCreateUserDTO;
