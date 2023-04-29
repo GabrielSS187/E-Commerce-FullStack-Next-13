@@ -2,7 +2,7 @@ type IdMongoDB = {
 	_id: string;
 };
 
-type CreateUserDTO = {
+export type CreateUserDTO = {
 	photo_url: string;
 	name: string;
 	email: string;
@@ -10,7 +10,7 @@ type CreateUserDTO = {
 	role: "normal" | "admin";
 };
 
-type UserMoreInfoDTO = {
+export type UserMoreInfoDTO = {
 	userId: string;
 	phone: string;
 	zipCode: string;
@@ -20,7 +20,7 @@ type UserMoreInfoDTO = {
 	country: string;
 };
 
-type UserExitDataDTO = {
+export type UserExitDataDTO = {
 	_id: IdMongoDB;
 	userMoreInfo: IdMongoDB & UserMoreInfoDTO;
 } & CreateUserDTO;
