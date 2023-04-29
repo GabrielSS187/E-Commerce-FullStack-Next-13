@@ -10,8 +10,8 @@ type TEditUser = {
 }
 
 type TFindUser = {
-  idUser: string;
-  email: string;
+  idUser?: string;
+  email?: string;
 }
 
 export abstract class UserContract {

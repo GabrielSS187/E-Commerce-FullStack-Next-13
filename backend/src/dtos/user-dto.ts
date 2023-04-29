@@ -7,7 +7,7 @@ export type TCreateUserDTO = {
 	name: string;
 	email: string;
 	password: string;
-	role: "normal" | "admin";
+	role: string | "normal" | "admin";
 };
 
 export type TUserMoreInfoDTO = {

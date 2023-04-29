@@ -15,7 +15,8 @@ export const createUserSchema = z.object({
 	name: string({ required_error: "Nome obrigatório." })
 		.trim()
 		.min(5, { message: "Nome tem que ter no mínimo 5 caracteres." })
-		.max(35, { message: "Nome tem que ter no máximo 35 caracteres." }),
+		.max(35, { message: "Nome tem que ter no máximo 35 caracteres." })
+    .transform((srt) => srt.charAt(0).toUpperCase() + srt.slice(1)),
 	email: string({ required_error: "Email obrigatório." })
 		.trim()
 		.email({ message: "Email invalido." }),
