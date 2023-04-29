@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { app } from "./config/server";
+import { app } from "./infra/config/server";
 import "express-async-errors";
 
 import { CustomError } from "./errors/CustomError";

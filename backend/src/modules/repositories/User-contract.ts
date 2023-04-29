@@ -2,7 +2,7 @@ import {
 	TCreateUserDTO,
 	TUserMoreInfoDTO,
 	TUserExitDataDTO,
-} from "../dtos/user-dto";
+} from "../../dtos/user-dto";
 
 type TEditUser = {
   idUser: string;
