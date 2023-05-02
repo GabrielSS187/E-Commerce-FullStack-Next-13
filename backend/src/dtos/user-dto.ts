@@ -20,5 +20,20 @@ export type TUserMoreInfoDTO = {
 
 export type TUserExitDataDTO = {
 	_id: TId;
-	userMoreInfo: { _id: TId } & TUserMoreInfoDTO;
+	userMoreInfo: { _id: TId } & TUserMoreInfoDTO | undefined;
 } & TCreateUserDTO;
+
+export type TEditUserDTO = {
+	photo_url?: string;
+	name?: string;
+	email?: string;
+	password?: string;
+	userMoreInfo?: {
+		phone?: string;
+		zipCode?: string;
+		address?: string;
+		city?: string;
+		state?: string;
+		country?: string;
+	};
+};
