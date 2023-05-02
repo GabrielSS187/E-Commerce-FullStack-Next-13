@@ -1,6 +1,4 @@
-type TIdMongoDB = {
-	_id: string;
-};
+type TId = string;
 
 export type TCreateUserDTO = {
 	photo_url: string;
@@ -11,7 +9,7 @@ export type TCreateUserDTO = {
 };
 
 export type TUserMoreInfoDTO = {
-	userId: string;
+	userId: TId;
 	phone: string;
 	zipCode: string;
 	address: string;
@@ -21,6 +19,6 @@ export type TUserMoreInfoDTO = {
 };
 
 export type TUserExitDataDTO = {
-	_id: TIdMongoDB;
-	userMoreInfo: TIdMongoDB & TUserMoreInfoDTO;
+	_id: TId;
+	userMoreInfo: { _id: TId } & TUserMoreInfoDTO;
 } & TCreateUserDTO;
