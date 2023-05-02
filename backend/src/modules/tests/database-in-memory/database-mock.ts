@@ -1,4 +1,4 @@
-import { TUserExitDataDTO } from "../../dtos/user-dto";
+import { TUserExitDataDTO } from "../../../dtos/user-dto";
 
 export const usersDbMock: TUserExitDataDTO[] = [
 	{

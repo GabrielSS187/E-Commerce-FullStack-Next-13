@@ -8,7 +8,6 @@ export const regexValidatePassword =
 export const createUserSchema = z.object({
 	photo_url: string()
 		.trim()
-		.optional()
 		.default(
 			"https://pt.seaicons.com/wp-content/uploads/2015/06/person-icon.png",
 		),
@@ -28,7 +27,7 @@ export const createUserSchema = z.object({
 		})
 		.min(6, { message: "O mínimo de caracteres da senha é 6." })
 		.max(8, { message: "O máxima de caracteres da senha é 8." }),
-	role: string().trim().optional().default("normal"),
+	role: string().trim().default("normal"),
 });
 
 export const loginUserSchema = z.object({

@@ -4,8 +4,8 @@ import {
 	TUserMoreInfoDTO,
 	TUserExitDataDTO,
 	TEditUserDTO,
-} from "../../dtos/user-dto";
-import { UserContract } from "../../modules/repositories/User-contract";
+} from "../../../dtos/user-dto";
+import { UserContract } from "../../../modules/repositories/User-contract";
 import { usersDbMock } from "../database-in-memory/database-mock";
 
 export class UserRepositoryInMemory implements UserContract {

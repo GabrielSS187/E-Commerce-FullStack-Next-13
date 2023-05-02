@@ -2,7 +2,7 @@ import { ZodError } from "zod";
 import { UserContract } from "../../repositories/User-contract";
 import { BCryptContract } from "../../../infra/adapters/Bcrypt-contract";
 import { TCreateUserRequest, createUserSchema } from "./schemas";
-import { UserError } from "../../../errors/User-error";
+import { UserError } from "../../errors/User-error";
 
 type TResponseData = {
   message: string;
@@ -15,7 +15,7 @@ export class CreateUserCase {
 		private bcrypt: BCryptContract,
 	) {}
 
-	async create(request: TCreateUserRequest): Promise<TResponseData | undefined> {
+	async create(request: TCreateUserRequest) {
 		try {
 			const { photo_url, name, email, password, role } =
 				createUserSchema.parse(request);
