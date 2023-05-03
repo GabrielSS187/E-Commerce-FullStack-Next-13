@@ -44,7 +44,7 @@ export class CreateUserCase {
 				throw new UserError(error.issues[0].message, 406);
 			}
 			if (error instanceof UserError) {
-				throw new UserError(error.error, error.statusCode);
+				throw new UserError(error.message, error.statusCode);
 			}
 		}
 	}

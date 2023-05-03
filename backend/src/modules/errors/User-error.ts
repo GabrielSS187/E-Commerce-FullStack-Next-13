@@ -1,7 +1,7 @@
 import { CustomError } from "./CustomError";
 
 export class UserError extends CustomError {
-	constructor(public error: string, statusCode: number) {
-		super(error, statusCode);
+	constructor(public message: string, statusCode: number) {
+		super(message, statusCode);
 	}
 }
