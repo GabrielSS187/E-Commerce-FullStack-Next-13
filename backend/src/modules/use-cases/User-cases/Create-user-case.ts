@@ -4,11 +4,6 @@ import { BCryptContract } from "../../../infra/adapters/Bcrypt-contract";
 import { TCreateUserRequest, createUserSchema } from "./schemas";
 import { UserError } from "../../errors/User-error";
 
-type TResponseData = {
-  message: string;
-  statusCode: number
-};
-
 export class CreateUserCase {
 	constructor(
 		private userContract: UserContract,
