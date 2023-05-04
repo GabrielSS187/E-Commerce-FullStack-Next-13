@@ -21,11 +21,11 @@ export const createUserSchema = z.object({
 		.email({ message: "Email invalido." }),
 	password: string({ required_error: "Senha obrigatória." })
 		.trim()
+		.min(6, { message: "O mínimo de caracteres da senha é 6." })
 		.regex(regexValidatePassword, {
 			message:
-				"Senha deve conter no máximo: 1 Letra maiúscula e minúscula, 1 número e 1 carácter especial.",
+				"Senha deve conter no máximo: 1 Letra maiúscula e minúscula, 1 número e 1 carácter especial é sem espaços.",
 		})
-		.min(6, { message: "O mínimo de caracteres da senha é 6." })
 		.max(8, { message: "O máxima de caracteres da senha é 8." }),
 	role: string().trim().default("normal"),
 });
