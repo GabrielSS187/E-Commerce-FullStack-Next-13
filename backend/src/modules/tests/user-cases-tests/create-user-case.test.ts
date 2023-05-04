@@ -38,7 +38,7 @@ describe("Tests in the file Create-user-case.", () => {
 		password: "12345bB/",
 	};
 
-	it("should create a user without errors", async () => {
+	it("should create a user without errors.", async () => {
 		const result = await sutCreateUserCase.create(newUser);
 		const user = usersDbMock.find((user) => user.email === newUser.email);
 
@@ -58,7 +58,7 @@ describe("Tests in the file Create-user-case.", () => {
 		expect.assertions(9);
 	});
 
-	it("Should throw an error if the email already exists", async () => {
+	it("Should throw an error if the email already exists.", async () => {
 		newUser["email"] = "gabriel@gmail.com";
 
 		try {
@@ -78,7 +78,7 @@ describe("Tests in the file Create-user-case.", () => {
 		expect.assertions(5);
 	});
 
-	it("should throw an error if a property is missing", async () => {
+	it("should throw an error if a property is missing.", async () => {
 		newUser["email"] = undefined;
 
 		try {
@@ -89,6 +89,25 @@ describe("Tests in the file Create-user-case.", () => {
 			expect(error).toBeInstanceOf(UserError);
 			expect(error.message).toBe("Email obrigatório.");
 			expect(error.statusCode).toBe(406);
+		}
+
+		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
+		expect(usersDbMock).toHaveLength(2);
+
+		expect.assertions(5);
+	});
+
+	it("Should throw one in case the email doesn't follow the correct pattern.", async () => {
+		newUser["email"] = "testgmail.com";
+
+		try {
+			await sutCreateUserCase.create(newUser);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).toBeInstanceOf(UserError);
+			expect(error.message).toBe("Email invalido.");
+			expect(error.statusCode).toBe(4061);
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
