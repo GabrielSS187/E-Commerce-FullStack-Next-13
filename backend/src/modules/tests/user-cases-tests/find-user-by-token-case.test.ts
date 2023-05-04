@@ -64,18 +64,18 @@ describe("Test in the file Find-user-by-token", () => {
 		await sutCreateUserCase.create(newUserData);
 		const loginUser = await sutUserLoginCase.login(dataUser);
 		const result = await sutFindUserByToken.find({
-      // rome-ignore lint/style/noNonNullAssertion: <explanation>
+			// rome-ignore lint/style/noNonNullAssertion: <explanation>
 			token: loginUser!.token,
 		});
 		const searchNewUser = usersDbMock.find(
 			(user) => user.email === dataUser.email,
-		);    
+		);
 
-    expect(result).toEqual({
-      statusCode: 200,
-      user: searchNewUser,
-    });
-    expect(result.user).toEqual(searchNewUser);
+		expect(result).toEqual({
+			statusCode: 200,
+			user: searchNewUser,
+		});
+		expect(result.user).toEqual(searchNewUser);
 		expect(mockJwt).toHaveBeenCalledOnce();
 		expect(mockBcrypt).toHaveBeenCalledOnce();
 
@@ -84,4 +84,26 @@ describe("Test in the file Find-user-by-token", () => {
 
 		expect.assertions(4);
 	});
+
+	it("should throw an error if you don't have JWT token", async () => {
+		const mockJwt = vi.spyOn(jwt, "getToken");
+
+		try {
+			await sutFindUserByToken.find({ token: "" });
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe("Token obrigatório.");
+			expect(error.statusCode).toBe(401);
+		}
+
+    expect(mockJwt).not.toHaveBeenCalledOnce();
+
+		mockJwt.mockRestore();
+
+		expect.assertions(4);
+	});
+
+	it("it should throw an error if the JWT token is expired or invalid.", async () => {});
 });
