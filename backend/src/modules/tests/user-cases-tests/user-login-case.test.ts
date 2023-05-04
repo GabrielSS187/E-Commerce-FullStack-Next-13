@@ -49,7 +49,8 @@ describe("Test in the file User-login-case.", () => {
 		password: "12345bB/",
 	};
 
-	const dataUser = {
+	// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+	const dataUser: any = {
 		email: "test@test.com",
 		password: "12345bB/",
 	};
@@ -57,21 +58,123 @@ describe("Test in the file User-login-case.", () => {
 	it("must return a JWT token after login.", async () => {
 		const mockJwt = vi.spyOn(jwt, "generateToken");
 		mockJwt.mockReturnValue("jwtToken");
-    const mockBcrypt = vi.spyOn(bcrypt, "compareHash");
+		const mockBcrypt = vi.spyOn(bcrypt, "compareHash");
 
-    await sutCreateUserCase.create(newUserData);
-    const result = await sutUserLoginCase.login(dataUser);    
+		await sutCreateUserCase.create(newUserData);
+		const result = await sutUserLoginCase.login(dataUser);
 
-    expect(result).toEqual({
-      statusCode: 200,
-      token: "jwtToken",
-    });
-    expect(mockJwt).toHaveBeenCalledOnce();
-    expect(mockBcrypt).toHaveBeenCalledOnce();
+		expect(result).toEqual({
+			statusCode: 200,
+			token: "jwtToken",
+		});
+		expect(mockJwt).toHaveBeenCalledOnce();
+		expect(mockBcrypt).toHaveBeenCalledOnce();
 
-    mockJwt.mockRestore();
-    mockBcrypt.mockRestore();
+		mockJwt.mockRestore();
+		mockBcrypt.mockRestore();
 
-    expect.assertions(3);
+		expect.assertions(3);
+	});
+
+	it("should throw an error if the email does not exist.", async () => {
+		const mockBcrypt = vi.spyOn(bcrypt, "compareHash");
+		const mockJwt = vi.spyOn(jwt, "generateToken");
+
+		dataUser["email"] = "test_ff@gmail.com";
+
+		try {
+			await sutUserLoginCase.login(dataUser);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe("Usuário não encontrado.");
+			expect(error.statusCode).toBe(404);
+		}
+
+		expect(mockBcrypt).not.toHaveBeenCalledOnce();
+		expect(mockJwt).not.toHaveBeenCalled();
+
+		expect.assertions(5);
+
+		mockBcrypt.mockRestore();
+		mockJwt.mockRestore();
+	});
+
+	it("should throw an error if the password is incorrect.", async () => {
+		const mockBcrypt = vi.spyOn(bcrypt, "compareHash");
+		const mockJwt = vi.spyOn(jwt, "generateToken");
+
+		dataUser["email"] = "test@test.com";
+		dataUser["password"] = "466372289";
+
+		try {
+			await sutUserLoginCase.login(dataUser);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe("Senha incorreta.");
+			expect(error.statusCode).toBe(406);
+		}
+
+		expect(mockBcrypt).toHaveBeenCalledOnce();
+		expect(mockJwt).not.toHaveBeenCalled();
+
+		expect.assertions(5);
+
+		mockBcrypt.mockRestore();
+		mockJwt.mockRestore();
+	});
+
+	it("should throw an error if the email is not the correct regex.", async () => {
+		const mockBcrypt = vi.spyOn(bcrypt, "compareHash");
+		const mockJwt = vi.spyOn(jwt, "generateToken");
+
+		dataUser["email"] = "testtest.com";
+
+		try {
+			await sutUserLoginCase.login(dataUser);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe("Email invalido.");
+			expect(error.statusCode).toBe(406);
+		}
+
+		expect(mockBcrypt).not.toHaveBeenCalledOnce();
+		expect(mockJwt).not.toHaveBeenCalled();
+
+		expect.assertions(5);
+
+		mockBcrypt.mockRestore();
+		mockJwt.mockRestore();
+	});
+
+	it("Should throw an error if any property is missing.", async () => {
+		const mockBcrypt = vi.spyOn(bcrypt, "compareHash");
+		const mockJwt = vi.spyOn(jwt, "generateToken");
+
+		dataUser["email"] = "test@test.com";
+		dataUser["password"] = undefined;
+
+		try {
+			await sutUserLoginCase.login(dataUser);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe("Senha obrigatória.");
+			expect(error.statusCode).toBe(406);
+		}
+
+		expect(mockBcrypt).not.toHaveBeenCalledOnce();
+		expect(mockJwt).not.toHaveBeenCalled();
+
+		expect.assertions(5);
+
+		mockBcrypt.mockRestore();
+		mockJwt.mockRestore();
 	});
 });
