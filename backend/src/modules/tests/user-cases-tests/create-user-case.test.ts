@@ -51,11 +51,12 @@ describe("Tests in the file Create-user-case.", () => {
 		expect(user).toBeDefined();
 		expect(user).toHaveProperty("_id");
 		expect(user).toHaveProperty("photo_url");
+		expect(user?.photo_url).toBe("https://pt.seaicons.com/wp-content/uploads/2015/06/person-icon.png");
 		expect(user).toHaveProperty("role");
 		expect(user?.role).toBe("normal");
 		expect(user?.password).toBe("hashedPassword");
 
-		expect.assertions(9);
+		expect.assertions(10);
 	});
 
 	it("Should throw an error if the email already exists.", async () => {
@@ -172,6 +173,28 @@ describe("Tests in the file Create-user-case.", () => {
 			expect(error).instanceOf(UserError);
 			expect(error.message).toBe(
 				"O máxima de caracteres da senha é 8.",
+			);
+			expect(error.statusCode).toBe(406);
+		}
+
+		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
+		expect(usersDbMock).toHaveLength(2);
+
+		expect.assertions(5);
+	});
+
+	it("should throw an error if name is less than 5.", async () => {
+		newUser["name"] = "Ga"
+		newUser["email"] = "test_5@test.com";
+
+		try {
+			await sutCreateUserCase.create(newUser);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe(
+				"Nome tem que ter no mínimo 5 caracteres.",
 			);
 			expect(error.statusCode).toBe(406);
 		}
