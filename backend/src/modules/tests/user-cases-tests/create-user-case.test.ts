@@ -107,7 +107,29 @@ describe("Tests in the file Create-user-case.", () => {
 		} catch (error: any) {
 			expect(error).toBeInstanceOf(UserError);
 			expect(error.message).toBe("Email invalido.");
-			expect(error.statusCode).toBe(4061);
+			expect(error.statusCode).toBe(406);
+		}
+
+		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
+		expect(usersDbMock).toHaveLength(2);
+
+		expect.assertions(5);
+	});
+
+	it("should throw an error if the password doesn't follow the regex format.", async () => {
+		newUser["password"] = "12345678";
+		newUser["email"] = "test_2@test.com";
+
+		try {
+			await sutCreateUserCase.create(newUser);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe(
+				"Senha deve conter no máximo: 1 Letra maiúscula e minúscula, 1 número e 1 carácter especial é sem espaços.",
+			);
+			expect(error.statusCode).toBe(406);
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();

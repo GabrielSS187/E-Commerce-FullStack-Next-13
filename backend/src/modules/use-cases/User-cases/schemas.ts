@@ -23,7 +23,7 @@ export const createUserSchema = z.object({
 		.trim()
 		.regex(regexValidatePassword, {
 			message:
-				"Senha deve conter no máximo: 1 Letra maiúscula e minúscula, 1 número e 1 carácter especial.",
+				"Senha deve conter no máximo: 1 Letra maiúscula e minúscula, 1 número e 1 carácter especial é sem espaços.",
 		})
 		.min(6, { message: "O mínimo de caracteres da senha é 6." })
 		.max(8, { message: "O máxima de caracteres da senha é 8." }),
