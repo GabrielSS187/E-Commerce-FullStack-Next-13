@@ -137,4 +137,26 @@ describe("Tests in the file Create-user-case.", () => {
 
 		expect.assertions(5);
 	});
+
+	it("should throw an error if the password is less than 6.", async () => {
+		newUser["password"] = "123";
+		newUser["email"] = "test_3@test.com";
+
+		try {
+			await sutCreateUserCase.create(newUser);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe(
+				"O mínimo de caracteres da senha é 6.",
+			);
+			expect(error.statusCode).toBe(406);
+		}
+
+		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
+		expect(usersDbMock).toHaveLength(2);
+
+		expect.assertions(5);
+	});
 });
