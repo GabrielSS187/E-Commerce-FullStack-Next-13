@@ -8,6 +8,8 @@ export const usersDbMock: TUserExitDataDTO[] = [
 		email: "gabriel@gmail.com",
 		password: "6892012bJ/*",
 		role: "normal",
+		createdAt: new Date("2023-04-11T00:32:10.000+00:00"),
+		updatedAt: new Date("2023-04-11T00:32:10.000+00:00"),
 		userMoreInfo: {
 			_id: "6799020101b",
 			userId: "123456789",

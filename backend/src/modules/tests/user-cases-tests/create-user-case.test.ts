@@ -51,12 +51,14 @@ describe("Tests in the file Create-user-case.", () => {
 		expect(user).toBeDefined();
 		expect(user).toHaveProperty("_id");
 		expect(user).toHaveProperty("photo_url");
+		expect(user).toHaveProperty("createdAt");
+		expect(user).toHaveProperty("updatedAt");
 		expect(user?.photo_url).toBe("https://pt.seaicons.com/wp-content/uploads/2015/06/person-icon.png");
 		expect(user).toHaveProperty("role");
 		expect(user?.role).toBe("normal");
 		expect(user?.password).toBe("hashedPassword");
 
-		expect.assertions(10);
+		expect.assertions(12);
 	});
 
 	it("Should throw an error if the email already exists.", async () => {
