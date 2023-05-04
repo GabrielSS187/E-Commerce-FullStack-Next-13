@@ -159,4 +159,26 @@ describe("Tests in the file Create-user-case.", () => {
 
 		expect.assertions(5);
 	});
+
+	it("should throw an error if the password is greater than 8.", async () => {
+		newUser["password"] = "12345bB/**";
+		newUser["email"] = "test_4@test.com";
+
+		try {
+			await sutCreateUserCase.create(newUser);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe(
+				"O máxima de caracteres da senha é 8.",
+			);
+			expect(error.statusCode).toBe(406);
+		}
+
+		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
+		expect(usersDbMock).toHaveLength(2);
+
+		expect.assertions(5);
+	});
 });
