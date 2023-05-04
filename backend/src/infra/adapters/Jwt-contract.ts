@@ -1,6 +1,6 @@
 export type TJwtAuthenticationData = {
 	userId: string;
-	role: "admin" | "normal";
+	role: string | "admin" | "normal";
 };
 
 export type TJwtGetTokenData = {
