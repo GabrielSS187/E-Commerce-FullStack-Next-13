@@ -7,9 +7,9 @@ import { UserError } from "../../errors/User-error";
 
 export class UserLoginCase {
 	constructor(
-		private userContract: UserContract,
-		private bcryptContract: BCryptContract,
-		private jwtContract: JwtContract,
+		private readonly userContract: UserContract,
+		private readonly bcryptContract: BCryptContract,
+		private readonly jwtContract: JwtContract,
 	) {}
 
 	async login(request: TLoginUserRequest) {
