@@ -76,7 +76,7 @@ describe("Test in the file Create-more-user-info-case.", () => {
 			expect(error.message).toBe("Esse número de celular não é valido.");
 			expect(error.statusCode).toBe(406);
 		}
-		
+
 		expect(user?.userMoreInfo).toBeUndefined();
 
 		expect.assertions(4);
@@ -98,9 +98,34 @@ describe("Test in the file Create-more-user-info-case.", () => {
 			expect(error.message).toBe("Cep invalido.");
 			expect(error.statusCode).toBe(406);
 		}
-		
+
 		expect(user?.userMoreInfo).toBeUndefined();
 
 		expect.assertions(4);
 	});
+
+	it("should throw an error if the state or country are greater than 2 characters.", async () => {
+		newInfo["state"] = "ABC";
+		newInfo["zipCode"] = "55555555";
+
+		const user = usersDbMock.find((user) => user._id === newInfo.userId);
+
+		try {
+			await sutCreateMoreUserInfoCase.create(newInfo);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe("Estado o máximo de caracteres é 2.");
+			expect(error.statusCode).toBe(406);
+		}
+
+		expect(user?.userMoreInfo).toBeUndefined();
+
+		expect.assertions(4);
+	});
+
+	it.skip("should throw an error if the address, city, state and country are less than 2 characters.", async () => {});
+
+	it.skip("should throw an error if any property is missing.", async () => {});
 });
