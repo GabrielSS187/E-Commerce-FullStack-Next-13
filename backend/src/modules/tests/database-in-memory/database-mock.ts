@@ -32,4 +32,15 @@ export const usersDbMock: TUserExitDataDTO[] = [
 		updatedAt: new Date("2023-04-11T00:32:10.000+00:00"),
 		userMoreInfo: undefined,
 	},
+	{
+		_id: "6468939939009",
+		photo_url: "photo_url",
+		name: "Ana",
+		email: "ana@gmail.com",
+		password: "6892012bJ/*",
+		role: "normal",
+		createdAt: new Date("2023-04-11T00:32:10.000+00:00"),
+		updatedAt: new Date("2023-04-11T00:32:10.000+00:00"),
+		userMoreInfo: undefined,
+	},
 ];

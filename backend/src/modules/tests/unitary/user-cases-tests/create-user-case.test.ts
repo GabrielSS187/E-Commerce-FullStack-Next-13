@@ -47,7 +47,7 @@ describe("Tests in the file Create-user-case.", () => {
 			statusCode: 201,
 		});
 		expect(bcryptMock.hashEncrypt).toHaveBeenCalledOnce();
-		expect(usersDbMock).toHaveLength(3);
+		expect(usersDbMock).toHaveLength(4)
 		expect(user).toBeDefined();
 		expect(user).toHaveProperty("_id");
 		expect(user).toHaveProperty("photo_url");
@@ -77,7 +77,7 @@ describe("Tests in the file Create-user-case.", () => {
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
-		expect(usersDbMock).toHaveLength(3);
+		expect(usersDbMock).toHaveLength(4)
 		expect.assertions(5);
 	});
 
@@ -95,7 +95,7 @@ describe("Tests in the file Create-user-case.", () => {
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
-		expect(usersDbMock).toHaveLength(3);
+		expect(usersDbMock).toHaveLength(4)
 
 		expect.assertions(5);
 	});
@@ -114,7 +114,7 @@ describe("Tests in the file Create-user-case.", () => {
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
-		expect(usersDbMock).toHaveLength(3);
+		expect(usersDbMock).toHaveLength(4)
 
 		expect.assertions(5);
 	});
@@ -136,7 +136,7 @@ describe("Tests in the file Create-user-case.", () => {
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
-		expect(usersDbMock).toHaveLength(3);
+		expect(usersDbMock).toHaveLength(4)
 
 		expect.assertions(5);
 	});
@@ -158,7 +158,7 @@ describe("Tests in the file Create-user-case.", () => {
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
-		expect(usersDbMock).toHaveLength(3);
+		expect(usersDbMock).toHaveLength(4)
 
 		expect.assertions(5);
 	});
@@ -180,7 +180,7 @@ describe("Tests in the file Create-user-case.", () => {
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
-		expect(usersDbMock).toHaveLength(3);
+		expect(usersDbMock).toHaveLength(4)
 
 		expect.assertions(5);
 	});
@@ -202,7 +202,7 @@ describe("Tests in the file Create-user-case.", () => {
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
-		expect(usersDbMock).toHaveLength(3);
+		expect(usersDbMock).toHaveLength(4)
 
 		expect.assertions(5);
 	});
@@ -224,7 +224,7 @@ describe("Tests in the file Create-user-case.", () => {
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
-		expect(usersDbMock).toHaveLength(3);
+		expect(usersDbMock).toHaveLength(4)
 
 		expect.assertions(5);
 	});

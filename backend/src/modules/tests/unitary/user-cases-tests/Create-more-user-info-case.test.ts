@@ -26,7 +26,7 @@ describe("Test in the file Create-more-user-info-case.", () => {
 		address: "Rua test, 123",
 		city: "Cidade Test",
 		country: "BR",
-		phone: "83986785354",
+		phone: "83982715054",
 		state: "SP",
 		zipCode: "55555555",
 	};
@@ -61,7 +61,24 @@ describe("Test in the file Create-more-user-info-case.", () => {
 		expect.assertions(3);
 	});
 
-	it("", async () => {
+	it("should throw an error with the cell phone number not following the regex pattern.", async () => {
+		newInfo["userId"] = "6468939939009";
+		newInfo["phone"] = "982715054";
+
+		const user = usersDbMock.find((user) => user._id === newInfo.userId);
+
+		try {
+			await sutCreateMoreUserInfoCase.create(newInfo);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe("Esse número de celular não é valido.");
+			expect(error.statusCode).toBe(406);
+		}
 		
+		expect(user?.userMoreInfo).toBeUndefined();
+
+		expect.assertions(4);
 	});
 });
