@@ -22,26 +22,26 @@ describe("Test in the file Create-more-user-info-case.", () => {
 
 	// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const newInfo: any = {
-    userId: "123475777432",
-    address: "Rua test, 123",
-    city: "Cidade Test",
-    country: "BR",
-    phone: "83986785354",
-    state: "SP",
-    zipCode: "55555555",
-  };
+		userId: "123475777432",
+		address: "Rua test, 123",
+		city: "Cidade Test",
+		country: "BR",
+		phone: "83986785354",
+		state: "SP",
+		zipCode: "55555555",
+	};
 
 	it("should create more user information without generating errors.", async () => {
-    const result = await sutCreateMoreUserInfoCase.create(newInfo);
-    const user = usersDbMock.find((user) => user._id === newInfo.userId);     
+		const result = await sutCreateMoreUserInfoCase.create(newInfo);
+		const user = usersDbMock.find((user) => user._id === newInfo.userId);
 
-    expect(result).toEqual({
-      statusCode: 201,
-      message: "Criado com sucesso.",
-    });
-    expect(user?.userMoreInfo).toBeDefined();
-    expect(user?.userMoreInfo).toHaveProperty("_id");
+		expect(result).toEqual({
+			statusCode: 201,
+			message: "Criado com sucesso.",
+		});
+		expect(user?.userMoreInfo).toBeDefined();
+		expect(user?.userMoreInfo).toHaveProperty("_id");
 
-    expect.assertions(3);
-  });
+		expect.assertions(3);
+	});
 });
