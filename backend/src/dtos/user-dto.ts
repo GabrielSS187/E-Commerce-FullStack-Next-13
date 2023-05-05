@@ -20,6 +20,8 @@ export type TUserMoreInfoDTO = {
 
 export type TUserExitDataDTO = {
 	_id: TId;
+	createdAt: Date,
+	updatedAt: Date,
 	userMoreInfo: { _id: TId } & TUserMoreInfoDTO | undefined;
 } & TCreateUserDTO;
 

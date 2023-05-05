@@ -47,16 +47,18 @@ describe("Tests in the file Create-user-case.", () => {
 			statusCode: 201,
 		});
 		expect(bcryptMock.hashEncrypt).toHaveBeenCalledOnce();
-		expect(usersDbMock).toHaveLength(2);
+		expect(usersDbMock).toHaveLength(3);
 		expect(user).toBeDefined();
 		expect(user).toHaveProperty("_id");
 		expect(user).toHaveProperty("photo_url");
+		expect(user).toHaveProperty("createdAt");
+		expect(user).toHaveProperty("updatedAt");
 		expect(user?.photo_url).toBe("https://pt.seaicons.com/wp-content/uploads/2015/06/person-icon.png");
 		expect(user).toHaveProperty("role");
 		expect(user?.role).toBe("normal");
 		expect(user?.password).toBe("hashedPassword");
 
-		expect.assertions(10);
+		expect.assertions(12);
 	});
 
 	it("Should throw an error if the email already exists.", async () => {
@@ -75,7 +77,7 @@ describe("Tests in the file Create-user-case.", () => {
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
-		expect(usersDbMock).toHaveLength(2);
+		expect(usersDbMock).toHaveLength(3);
 		expect.assertions(5);
 	});
 
@@ -93,7 +95,7 @@ describe("Tests in the file Create-user-case.", () => {
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
-		expect(usersDbMock).toHaveLength(2);
+		expect(usersDbMock).toHaveLength(3);
 
 		expect.assertions(5);
 	});
@@ -112,7 +114,7 @@ describe("Tests in the file Create-user-case.", () => {
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
-		expect(usersDbMock).toHaveLength(2);
+		expect(usersDbMock).toHaveLength(3);
 
 		expect.assertions(5);
 	});
@@ -134,7 +136,7 @@ describe("Tests in the file Create-user-case.", () => {
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
-		expect(usersDbMock).toHaveLength(2);
+		expect(usersDbMock).toHaveLength(3);
 
 		expect.assertions(5);
 	});
@@ -156,7 +158,7 @@ describe("Tests in the file Create-user-case.", () => {
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
-		expect(usersDbMock).toHaveLength(2);
+		expect(usersDbMock).toHaveLength(3);
 
 		expect.assertions(5);
 	});
@@ -178,7 +180,7 @@ describe("Tests in the file Create-user-case.", () => {
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
-		expect(usersDbMock).toHaveLength(2);
+		expect(usersDbMock).toHaveLength(3);
 
 		expect.assertions(5);
 	});
@@ -200,7 +202,7 @@ describe("Tests in the file Create-user-case.", () => {
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
-		expect(usersDbMock).toHaveLength(2);
+		expect(usersDbMock).toHaveLength(3);
 
 		expect.assertions(5);
 	});
@@ -222,7 +224,7 @@ describe("Tests in the file Create-user-case.", () => {
 		}
 
 		expect(bcryptMock.hashEncrypt).not.toHaveBeenCalled();
-		expect(usersDbMock).toHaveLength(2);
+		expect(usersDbMock).toHaveLength(3);
 
 		expect.assertions(5);
 	});

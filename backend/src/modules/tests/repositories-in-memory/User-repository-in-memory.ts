@@ -12,6 +12,8 @@ export class UserRepositoryInMemory implements UserContract {
 	async create(params: TCreateUserDTO): Promise<void> {
 		usersDbMock.push({
 			_id: crypto.randomUUID(),
+			createdAt: new Date(),
+			updatedAt: new Date(),
 			...params,
 			userMoreInfo: undefined,
 		});

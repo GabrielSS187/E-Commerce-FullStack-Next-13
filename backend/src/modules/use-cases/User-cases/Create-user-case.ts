@@ -6,8 +6,8 @@ import { UserError } from "../../errors/User-error";
 
 export class CreateUserCase {
 	constructor(
-		private userContract: UserContract,
-		private bcrypt: BCryptContract,
+		private readonly userContract: UserContract,
+		private readonly bcrypt: BCryptContract,
 	) {}
 
 	async create(request: TCreateUserRequest) {

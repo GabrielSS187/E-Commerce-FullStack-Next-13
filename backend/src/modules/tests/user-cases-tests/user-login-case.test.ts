@@ -3,11 +3,6 @@ import {
 	describe,
 	it,
 	vi,
-	Mocked,
-	beforeEach,
-	afterEach,
-	SpyInstance,
-	Vitest,
 } from "vitest";
 
 import { usersDbMock } from "../database-in-memory/database-mock";
