@@ -25,9 +25,9 @@ describe("Test in the file Create-more-user-info-case.", () => {
 		userId: "123475777432",
 		address: "Rua test, 123",
 		city: "Cidade Test",
-		country: "BR",
+		country: "br",
 		phone: "83982715054",
-		state: "SP",
+		state: "sp",
 		zipCode: "55555555",
 	};
 
@@ -41,8 +41,11 @@ describe("Test in the file Create-more-user-info-case.", () => {
 		});
 		expect(user?.userMoreInfo).toBeDefined();
 		expect(user?.userMoreInfo).toHaveProperty("_id");
+		expect(user?.userMoreInfo?.phone.substring(0, 3)).toBe("+55");
+		expect(user?.userMoreInfo?.state).toBe("SP");
+		expect(user?.userMoreInfo?.country).toBe("BR");
 
-		expect.assertions(3);
+		expect.assertions(6);
 	});
 
 	it("should throw an error if the user does not exist.", async () => {
