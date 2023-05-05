@@ -58,13 +58,13 @@ export const createMoreUserInfoSchema = z.object({
 		.min(2, { message: "Cidade no mínimo 2 caracteres." }),
 	state: string({ required_error: "Estado obrigatório." })
 		.trim()
-		.max(2, { message: "Estado máximo de caracteres é 2." })
-		.min(2, { message: "Estado mínimo de caracteres é 2." })
+		.min(2, { message: "Estado o mínimo de caracteres é 2." })
+		.max(2, { message: "Estado o máximo de caracteres é 2." })
 		.transform((srt) => srt.toLocaleUpperCase()),
 	country: string({ required_error: "País obrigatório." })
 		.trim()
-		.max(2, { message: "País máximo de caracteres é 2." })
-		.min(2, { message: "País mínimo de caracteres é 2." })
+		.min(2, { message: "País o mínimo de caracteres é 2." })
+		.max(2, { message: "País o máximo de caracteres é 2." })
 		.transform((srt) => srt.toLocaleUpperCase()),
 });
 
