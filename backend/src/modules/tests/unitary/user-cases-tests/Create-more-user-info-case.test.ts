@@ -44,4 +44,24 @@ describe("Test in the file Create-more-user-info-case.", () => {
 
 		expect.assertions(3);
 	});
+
+	it("should throw an error if the user does not exist.", async () => {
+		newInfo["userId"] = "not_found";
+
+		try {
+			await sutCreateMoreUserInfoCase.create(newInfo);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe("Usuário não encontrado.");
+			expect(error.statusCode).toBe(404);
+		}
+
+		expect.assertions(3);
+	});
+
+	it("", async () => {
+		
+	});
 });
