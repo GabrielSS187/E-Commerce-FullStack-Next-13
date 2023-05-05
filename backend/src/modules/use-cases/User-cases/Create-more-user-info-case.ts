@@ -6,7 +6,7 @@ import {
 } from "./schemas";
 import { UserError } from "../../errors/User-error";
 
-export class createMoreUserInfoCase {
+export class CreateMoreUserInfoCase {
 	constructor(private readonly userContract: UserContract) {}
 
 	async create(request: TCreateMoreUserInfoRequest) {
@@ -16,7 +16,7 @@ export class createMoreUserInfoCase {
 
 			const user = await this.userContract.findUser({ idUser: userId });
 
-			if (user) throw new UserError("Usuário não encontrado.", 404);
+			if (!user) throw new UserError("Usuário não encontrado.", 404);
 
 			await this.userContract.createMoreInfo({
 				userId,

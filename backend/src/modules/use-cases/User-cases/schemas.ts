@@ -4,7 +4,7 @@ import { string, z } from "zod";
 //* Pelo menos um caractere especial, Comprimento mínimo de oito.
 const regexValidatePassword =
 	/^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/g;
-const regexValidatePhone = /^(\+55|55)?([1-9])(\d{8,9})$/;
+const regexValidatePhone = /^([1-9]{2})9\d{8}$/;
 const regexValidateCep = /^\d{8}$/;
 
 export const createUserSchema = z.object({
@@ -45,7 +45,8 @@ export const createMoreUserInfoSchema = z.object({
 		.trim()
 		.regex(regexValidatePhone, {
 			message: "Esse número de celular não é valido.",
-		}),
+		})
+		.transform((srt) => `+55${srt}`),
 	zipCode: string({ required_error: "Cep obrigatório." })
 		.trim()
 		.regex(regexValidateCep, { message: "Cep invalido." }),
@@ -57,15 +58,18 @@ export const createMoreUserInfoSchema = z.object({
 		.min(2, { message: "Cidade no mínimo 2 caracteres." }),
 	state: string({ required_error: "Estado obrigatório." })
 		.trim()
-		.min(2, { message: "Estado no mínimo 2 caracteres." }),
+		.max(2, { message: "Estado máximo de caracteres é 2." })
+		.min(2, { message: "Estado mínimo de caracteres é 2." })
+		.transform((srt) => srt.toLocaleUpperCase()),
 	country: string({ required_error: "País obrigatório." })
 		.trim()
 		.max(2, { message: "País máximo de caracteres é 2." })
-		.transform((srt) => {
-			return srt.toLocaleUpperCase();
-		}),
+		.min(2, { message: "País mínimo de caracteres é 2." })
+		.transform((srt) => srt.toLocaleUpperCase()),
 });
 
 export type TCreateUserRequest = z.infer<typeof createUserSchema>;
 export type TLoginUserRequest = z.infer<typeof loginUserSchema>;
-export type TCreateMoreUserInfoRequest = z.infer<typeof createMoreUserInfoSchema>;
+export type TCreateMoreUserInfoRequest = z.infer<
+	typeof createMoreUserInfoSchema
+>;
