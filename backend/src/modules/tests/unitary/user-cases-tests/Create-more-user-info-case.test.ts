@@ -146,5 +146,24 @@ describe("Test in the file Create-more-user-info-case.", () => {
 		expect.assertions(4);
 	});
 
-	it.skip("should throw an error if any property is missing.", async () => {});
+	it("should throw an error if any property is missing.", async () => {
+		newInfo["country"] = "ZA";
+		newInfo["address"] = undefined;
+
+		const user = usersDbMock.find((user) => user._id === newInfo.userId);
+
+		try {
+			await sutCreateMoreUserInfoCase.create(newInfo);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe("Endereço obrigatório.");
+			expect(error.statusCode).toBe(406);
+		}
+
+		expect(user?.userMoreInfo).toBeUndefined();
+
+		expect.assertions(4);
+	});
 });
