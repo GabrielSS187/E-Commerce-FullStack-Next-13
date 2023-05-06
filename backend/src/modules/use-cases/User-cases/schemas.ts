@@ -68,8 +68,14 @@ export const createMoreUserInfoSchema = z.object({
 		.transform((srt) => srt.toLocaleUpperCase()),
 });
 
+export const editInfoUserSchema = createUserSchema
+	.omit({ role: true })
+	.extend({ userMoreInfo: createMoreUserInfoSchema.omit({ userId: true }).partial() })
+	.partial();
+
 export type TCreateUserRequest = z.infer<typeof createUserSchema>;
 export type TLoginUserRequest = z.infer<typeof loginUserSchema>;
 export type TCreateMoreUserInfoRequest = z.infer<
 	typeof createMoreUserInfoSchema
 >;
+export type TEditInfoUserRequest = z.infer<typeof editInfoUserSchema>;
