@@ -154,7 +154,7 @@ describe("", async () => {
 		const spyJwt = vi.spyOn(jwt, "getToken");
 
 		//* Antes
-		const copyUser = {...user};
+		const copyUser = { ...user };
 		// rome-ignore lint/style/noNonNullAssertion: <explanation>
 		const result = await sutEditInfoUserCase.edit(resUserLogin!.token!, {
 			//* Depois
@@ -167,8 +167,32 @@ describe("", async () => {
 		});
 		expect(user?.password).not.toBe(copyUser.password);
 		expect(spyJwt).toHaveBeenCalledOnce();
-		expect(spyBcrypt).toHaveBeenCalledOnce();		
+		expect(spyBcrypt).toHaveBeenCalledOnce();
 
 		expect.assertions(4);
-	})
+	});
+
+	it("should throw an error if it doesn't have a JWT token.", async () => {
+		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
+		const spyJwt = vi.spyOn(jwt, "getToken");
+
+		try {
+			await sutEditInfoUserCase.edit("", {
+				userMoreInfo: {
+					city: "João Pessoa",
+				},
+			});
+			throw new Error("Teste failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.statusCode).toBe(401);
+			expect(error.message).toBe("Token JWT obrigatório.");
+		}
+
+		expect(spyJwt).not.toHaveBeenCalledOnce();
+		expect(spyBcrypt).not.toHaveBeenCalledOnce();
+
+		expect.assertions(5);
+	});
 });
