@@ -78,26 +78,49 @@ describe("", async () => {
 	});
 
 	it("must edit user without throwing errors.", async () => {
-    const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
-    const spyJwt = vi.spyOn(jwt, "getToken");
+		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
+		const spyJwt = vi.spyOn(jwt, "getToken");
 
 		// rome-ignore lint/style/noNonNullAssertion: <explanation>
 		const result = await sutEditInfoUserCase.edit(resUserLogin!.token, {
-      name: "Edit Test",
-      userMoreInfo: {
-        city: "Edite Cidade Teste"
-      }
-    });
+			name: "Edit Test",
+			userMoreInfo: {
+				city: "Edite Cidade Teste",
+			},
+		});
 
-    expect(result).toEqual({
-      statusCode: 200,
-      message: "Informações editadas com sucesso.",
-    });
-    expect(user?.name).toBe("Edit Test");
-    expect(user?.userMoreInfo?.city).toBe("Edite Cidade Teste");
-    expect(spyBcrypt).not.toHaveBeenCalledOnce();
-    expect(spyJwt).toHaveBeenCalledOnce();
+		expect(result).toEqual({
+			statusCode: 200,
+			message: "Informações editadas com sucesso.",
+		});
+		expect(user?.name).toBe("Edit Test");
+		expect(user?.userMoreInfo?.city).toBe("Edite Cidade Teste");
+		expect(spyJwt).toHaveBeenCalledOnce();
+		expect(spyBcrypt).not.toHaveBeenCalledOnce();
 
-    expect.assertions(5);
+		expect.assertions(5);
+	});
+
+	it("should throw an error if the properties: photo_url, name, email, password exist but have no value.", async () => {
+		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
+		const spyJwt = vi.spyOn(jwt, "getToken");
+
+		try {
+			// rome-ignore lint/style/noNonNullAssertion: <explanation>
+			await sutEditInfoUserCase.edit(resUserLogin!.token!, {
+				password: "",
+			});
+			throw new Error("Teste failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.statusCode).toBe(406);
+			expect(error.message).toBe("O mínimo de caracteres da senha é 6.");
+		}
+
+		expect(spyJwt).toHaveBeenCalledOnce();
+		expect(spyBcrypt).not.toHaveBeenCalledOnce();
+
+		expect.assertions(5);
 	});
 });
