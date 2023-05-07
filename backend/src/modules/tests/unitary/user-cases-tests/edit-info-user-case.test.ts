@@ -148,4 +148,27 @@ describe("", async () => {
 
 		expect.assertions(5);
 	});
+
+	it("must call the function: hashEncrypt, if there is a new password.", async () => {
+		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
+		const spyJwt = vi.spyOn(jwt, "getToken");
+
+		//* Antes
+		const copyUser = {...user};
+		// rome-ignore lint/style/noNonNullAssertion: <explanation>
+		const result = await sutEditInfoUserCase.edit(resUserLogin!.token!, {
+			//* Depois
+			password: "17171jA/",
+		});
+
+		expect(result).toEqual({
+			statusCode: 200,
+			message: "Informações editadas com sucesso.",
+		});
+		expect(user?.password).not.toBe(copyUser.password);
+		expect(spyJwt).toHaveBeenCalledOnce();
+		expect(spyBcrypt).toHaveBeenCalledOnce();		
+
+		expect.assertions(4);
+	})
 });
