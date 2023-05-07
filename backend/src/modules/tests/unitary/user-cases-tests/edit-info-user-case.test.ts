@@ -219,4 +219,27 @@ describe("", async () => {
 
 		expect.assertions(5);
 	});
+
+	it("it should throw an error if the new email already exists.", async () => {
+		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
+		const spyJwt = vi.spyOn(jwt, "getToken");
+
+		try {
+			// rome-ignore lint/style/noNonNullAssertion: <explanation>
+			await sutEditInfoUserCase.edit(resUserLogin!.token!, {
+				email: "gabriel@gmail.com",
+			});
+			throw new Error("Teste failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.statusCode).toBe(409);
+			expect(error.message).toBe("Já existe um usuário cadastrado com esse email.");
+		}
+
+		expect(spyJwt).toHaveBeenCalledOnce();
+		expect(spyBcrypt).not.toHaveBeenCalledOnce();
+
+		expect.assertions(5);
+	});
 });
