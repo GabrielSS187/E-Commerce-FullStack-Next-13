@@ -123,4 +123,29 @@ describe("", async () => {
 
 		expect.assertions(5);
 	});
+
+	it("should throw an error if the properties of obj: userMoreInfo, exist but do not have values.", async () => {
+		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
+		const spyJwt = vi.spyOn(jwt, "getToken");
+
+		try {
+			// rome-ignore lint/style/noNonNullAssertion: <explanation>
+			await sutEditInfoUserCase.edit(resUserLogin!.token!, {
+				userMoreInfo: {
+					city: "",
+				},
+			});
+			throw new Error("Teste failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.statusCode).toBe(406);
+			expect(error.message).toBe("Cidade no mínimo 2 caracteres.");
+		}
+
+		expect(spyJwt).toHaveBeenCalledOnce();
+		expect(spyBcrypt).not.toHaveBeenCalledOnce();
+
+		expect.assertions(5);
+	});
 });
