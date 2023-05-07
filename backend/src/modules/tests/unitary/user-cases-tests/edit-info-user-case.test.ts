@@ -195,4 +195,28 @@ describe("", async () => {
 
 		expect.assertions(5);
 	});
+
+	it("should throw an error if the JWT token is invalid or expired.", async () => {
+		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
+		const spyJwt = vi.spyOn(jwt, "getToken");
+
+		try {
+			await sutEditInfoUserCase.edit("Toke_Invalid", {
+				userMoreInfo: {
+					city: "João Pessoa",
+				},
+			});
+			throw new Error("Teste failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.statusCode).toBe(401);
+			expect(error.message).toBeDefined();
+		}
+
+		expect(spyJwt).toHaveBeenCalledOnce();
+		expect(spyBcrypt).not.toHaveBeenCalledOnce();
+
+		expect.assertions(5);
+	});
 });
