@@ -267,16 +267,15 @@ describe("", async () => {
 		expect.assertions(5);
 	});
 
-	it.skip("should throw an error if the zip code doesn't follow the regex pattern.", async () => {
-		newInfo["userId"] = "6468939939009";
-		newInfo["phone"] = "83982715054";
-		newInfo["zipCode"] = "123456789";
-
-		const user = usersDbMock.find((user) => user._id === newInfo.userId);
+	it("should throw an error if the zip code doesn't follow the regex pattern.", async () => {
+		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
+		const spyJwt = vi.spyOn(jwt, "getToken");
 
 		try {
-			await sutCreateMoreUserInfoCase.create(newInfo);
-			throw new Error("Test failed");
+			// rome-ignore lint/style/noNonNullAssertion: <explanation>
+			await sutEditInfoUserCase.edit(resUserLogin!.token!, {
+				userMoreInfo: { zipCode: "cep_invalido" },
+			});
 			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).instanceOf(UserError);
@@ -284,8 +283,9 @@ describe("", async () => {
 			expect(error.statusCode).toBe(406);
 		}
 
-		expect(user?.userMoreInfo).toBeUndefined();
+		expect(spyJwt).toHaveBeenCalledOnce();
+		expect(spyBcrypt).not.toHaveBeenCalledOnce();
 
-		expect.assertions(4);
+		expect.assertions(5);
 	});
 });
