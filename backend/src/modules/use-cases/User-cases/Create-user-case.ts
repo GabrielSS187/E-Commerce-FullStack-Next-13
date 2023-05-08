@@ -22,7 +22,6 @@ export class CreateUserCase {
 				createUserSchema.parse(request);
 
 			const userEmail = await this.userContract.findUser({ email });
-
 			if (userEmail) {
 				throw new UserError(
 					"Já existe um usuário cadastrado com esse email.",
