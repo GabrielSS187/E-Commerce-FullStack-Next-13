@@ -4,16 +4,16 @@ import { authMiddleware } from "../../infra/middlewares/auth-middleware";
 
 export const userRouter = Router();
 
-const userController = new UserControllers();
+const userControllers = new UserControllers();
 
 //* Pegar usuário através do token.
-userRouter.get("/", authMiddleware, userController.findByToken);
+userRouter.get("/", authMiddleware, userControllers.findByToken);
 
-userRouter.post("/create", userController.create);
-userRouter.post("/login", userController.login);
+userRouter.post("/create", userControllers.create);
+userRouter.post("/login", userControllers.login);
 
-userRouter.put("/create-more-info/:idUser", userController.createMoreInfo);
+userRouter.put("/create-more-info/:idUser", userControllers.createMoreInfo);
 
-userRouter.patch("/edit", authMiddleware, userController.edit);
+userRouter.patch("/edit", authMiddleware, userControllers.edit);
 
-userRouter.delete("/delete", authMiddleware, () => {});
+userRouter.delete("/delete", authMiddleware, userControllers.delete);

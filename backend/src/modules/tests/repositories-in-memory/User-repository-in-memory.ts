@@ -67,7 +67,7 @@ export class UserRepositoryInMemory implements UserContract {
 
 	async delete(idUser: string): Promise<void> {
 		const indexUser = usersDbMock.findIndex((user) => user._id === idUser);
-		usersDbMock.splice(1, indexUser);
+		usersDbMock.splice(indexUser, 1);
 	}
 
 	async findUser(params: {
