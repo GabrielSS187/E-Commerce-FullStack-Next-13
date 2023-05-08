@@ -16,13 +16,13 @@ export class UserRepository implements UserContract {
 	}
 
 	async edit(params: { idUser: string; newData: TEditUserDTO }): Promise<void> {
-		throw new Error("Method not implemented.");
+		console.log(params);
 	}
 
 	async delete(idUser: string): Promise<void> {
 		throw new Error("Method not implemented.");
 	}
-	
+
 	async findUser(params: {
 		idUser?: string;
 		email?: string;

@@ -62,12 +62,47 @@ export class UserControllers {
 		return res.status(result.statusCode).json(result.message);
 	}
 
-	// async login(request: Request, response: Response): Promise<Response> {}
+	async login(req: Request, res: Response): Promise<Response> {
+		const { email, password } = req.body;
 
-	// async createMoreInfo(
-	// 	request: Request,
-	// 	response: Response,
-	// ): Promise<Response> {}
+		const userLoginCase = new UserLoginCase(userRepository, bcrypt, jwt);
 
-	// async findByToken(request: Request, response: Response): Promise<Response> {}
+		const result = await userLoginCase.login({
+			email,
+			password,
+		});
+
+		return res.status(result.statusCode).json(result.token);
+	}
+
+	async createMoreInfo(req: Request, res: Response): Promise<Response> {
+		const { idUser } = req.params;
+		const { address, city, country, phone, state, zipCode } = req.body;
+
+		const createMoreUserInfoCase = new CreateMoreUserInfoCase(userRepository);
+
+		const result = await createMoreUserInfoCase.create({
+			userId: idUser,
+			address,
+			city,
+			country,
+			phone,
+			state,
+			zipCode,
+		});
+
+		return res.status(result.statusCode).json(result.message);
+	}
+
+	async findByToken(req: Request, res: Response): Promise<Response> {
+		const { idUser } = req;
+
+		const findUserByTokenCase = new FindUserByTokenCase(userRepository);
+
+		const result = await findUserByTokenCase.find({
+			userId: idUser,
+		});
+
+		return res.status(result.statusCode).json(result.user);
+	}
 }

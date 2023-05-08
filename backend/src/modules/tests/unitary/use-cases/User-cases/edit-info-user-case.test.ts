@@ -144,7 +144,7 @@ describe("", async () => {
 		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
 
 		//* Antes
-		const copyUser = { ...user }
+		const copyUser = { ...user };
 		const result = await sutEditInfoUserCase.edit(decryptToken.userId, {
 			//* Depois
 			password: "17171jA/",
