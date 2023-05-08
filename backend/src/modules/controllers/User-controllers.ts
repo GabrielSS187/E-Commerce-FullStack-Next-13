@@ -1,0 +1,121 @@
+import { Request, Response } from "express";
+import { CreateUserCase } from "../use-cases/User-cases/Create-user-case";
+import { UserLoginCase } from "../use-cases/User-cases/User-login-case";
+import { CreateMoreUserInfoCase } from "../use-cases/User-cases/Create-more-user-info-case";
+import { EditInfoUserCase } from "../use-cases/User-cases/Edit-info-user-case";
+import { DeleteUserCase } from "../use-cases/User-cases/Delete-user-case";
+import { FindUserByTokenCase } from "../use-cases/User-cases/Find-user-by-token-case";
+import { UserRepository } from "../repositories/mongoose/User-repository";
+import { JwtAdapter } from "../../infra/adapters/JwtAdapter/Jwt-adapter";
+import { BCryptAdapter } from "../../infra/adapters/BcryptAdapter/Bcrypt-adapter";
+
+const userRepository = new UserRepository();
+const jwt = new JwtAdapter();
+const bcrypt = new BCryptAdapter();
+
+export class UserControllers {
+	async create(req: Request, res: Response): Promise<Response> {
+		const { name, email, password } = req.body;
+
+		const createUser = new CreateUserCase(userRepository, bcrypt);
+
+		const result = await createUser.create({
+			name,
+			email,
+			password,
+		});
+
+		return res.status(result.statusCode).json(result.message);
+	}
+
+	async edit(req: Request, res: Response): Promise<Response> {
+		const { idUser } = req;
+		const {
+			photo_url,
+			name,
+			email,
+			password,
+			phone,
+			zipCode,
+			address,
+			city,
+			state,
+			country,
+		} = req.body;
+
+		const editInfoUserCase = new EditInfoUserCase(userRepository, bcrypt);
+
+		const result = await editInfoUserCase.edit(idUser, {
+			photo_url,
+			name,
+			email,
+			password,
+			userMoreInfo: {
+				phone,
+				zipCode,
+				address,
+				city,
+				state,
+				country,
+			},
+		});
+
+		return res.status(result.statusCode).json(result.message);
+	}
+
+	async delete(req: Request, res: Response){
+		const { idUser } = req;
+
+		const deleteUserCase = new DeleteUserCase(
+			userRepository,
+		);
+
+		const result = await deleteUserCase.delete({ idUser });
+
+		return res.status(result.statusCode).json(result.message);
+	};
+
+	async login(req: Request, res: Response): Promise<Response> {
+		const { email, password } = req.body;
+
+		const userLoginCase = new UserLoginCase(userRepository, bcrypt, jwt);
+
+		const result = await userLoginCase.login({
+			email,
+			password,
+		});
+
+		return res.status(result.statusCode).json(result.token);
+	}
+
+	async createMoreInfo(req: Request, res: Response): Promise<Response> {
+		const { idUser } = req.params;
+		const { address, city, country, phone, state, zipCode } = req.body;
+
+		const createMoreUserInfoCase = new CreateMoreUserInfoCase(userRepository);
+
+		const result = await createMoreUserInfoCase.create({
+			userId: idUser,
+			address,
+			city,
+			country,
+			phone,
+			state,
+			zipCode,
+		});
+
+		return res.status(result.statusCode).json(result.message);
+	}
+
+	async findByToken(req: Request, res: Response): Promise<Response> {
+		const { idUser } = req;
+
+		const findUserByTokenCase = new FindUserByTokenCase(userRepository);
+
+		const result = await findUserByTokenCase.find({
+			userId: idUser,
+		});
+
+		return res.status(result.statusCode).json(result.user);
+	}
+}

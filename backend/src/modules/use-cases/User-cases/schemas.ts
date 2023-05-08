@@ -10,6 +10,7 @@ const regexValidateCep = /^\d{8}$/;
 export const createUserSchema = z.object({
 	photo_url: string()
 		.trim()
+		.optional()
 		.default(
 			"https://pt.seaicons.com/wp-content/uploads/2015/06/person-icon.png",
 		),
@@ -29,7 +30,7 @@ export const createUserSchema = z.object({
 				"Senha deve conter no máximo: 1 Letra maiúscula e minúscula, 1 número e 1 carácter especial é sem espaços.",
 		})
 		.max(8, { message: "O máxima de caracteres da senha é 8." }),
-	role: string().trim().default("normal"),
+	role: string().trim().optional().default("normal"),
 });
 
 export const loginUserSchema = z.object({

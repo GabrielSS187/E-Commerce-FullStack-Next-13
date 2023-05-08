@@ -32,13 +32,15 @@ export class CreateMoreUserInfoCase {
 				statusCode: 201,
 				message: "Criado com sucesso.",
 			};
-		} catch (error) {
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
 			if (error instanceof ZodError) {
 				throw new UserError(error.issues[0].message, 406);
 			}
 			if (error instanceof UserError) {
 				throw new UserError(error.message, error.statusCode);
 			}
+			throw new Error(error.message);
 		}
 	}
 }
