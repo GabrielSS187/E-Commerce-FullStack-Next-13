@@ -1,9 +1,9 @@
 import { expect, describe, it, vi } from "vitest";
 
-import { usersDbMock } from "../../database-in-memory/database-mock";
-import { UserRepositoryInMemory } from "../../repositories-in-memory/User-repository-in-memory";
-import { CreateMoreUserInfoCase } from "../../../use-cases/User-cases/Create-more-user-info-case";
-import { UserError } from "../../../errors/User-error";
+import { usersDbMock } from "../../../database-in-memory/database-mock";
+import { UserRepositoryInMemory } from "../../../repositories-in-memory/User-repository-in-memory";
+import { CreateMoreUserInfoCase } from "../../../../use-cases/User-cases/Create-more-user-info-case";
+import { UserError } from "../../../../errors/User-error";
 
 const sutFactory = () => {
 	const userRepositoryInMemory = new UserRepositoryInMemory();

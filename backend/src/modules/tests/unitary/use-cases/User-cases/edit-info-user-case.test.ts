@@ -1,14 +1,14 @@
 import { expect, describe, it, vi } from "vitest";
 
-import { UserRepositoryInMemory } from "../../repositories-in-memory/User-repository-in-memory";
-import { UserLoginCase } from "../../../use-cases/User-cases/User-login-case";
-import { CreateUserCase } from "../../../use-cases/User-cases/Create-user-case";
-import { BCryptAdapter } from "../../../../infra/adapters/BcryptAdapter/Bcrypt-adapter";
-import { CreateMoreUserInfoCase } from "../../../use-cases/User-cases/Create-more-user-info-case";
-import { EditInfoUserCase } from "../../../use-cases/User-cases/Edit-info-user-case";
-import { JwtAdapter } from "../../../../infra/adapters/JwtAdapter/Jwt-adapter";
-import { UserError } from "../../../errors/User-error";
-import { usersDbMock } from "../../database-in-memory/database-mock";
+import { UserRepositoryInMemory } from "../../../repositories-in-memory/User-repository-in-memory";
+import { UserLoginCase } from "../../../../use-cases/User-cases/User-login-case";
+import { CreateUserCase } from "../../../../use-cases/User-cases/Create-user-case";
+import { BCryptAdapter } from "../../../../../infra/adapters/BcryptAdapter/Bcrypt-adapter";
+import { CreateMoreUserInfoCase } from "../../../../use-cases/User-cases/Create-more-user-info-case";
+import { EditInfoUserCase } from "../../../../use-cases/User-cases/Edit-info-user-case";
+import { JwtAdapter } from "../../../../../infra/adapters/JwtAdapter/Jwt-adapter";
+import { UserError } from "../../../../errors/User-error";
+import { usersDbMock } from "../../../database-in-memory/database-mock";
 
 const sutFactory = () => {
 	const bcrypt = new BCryptAdapter();

@@ -4,21 +4,19 @@ import { UserLoginCase } from "../use-cases/User-cases/User-login-case";
 import { CreateMoreUserInfoCase } from "../use-cases/User-cases/Create-more-user-info-case";
 import { EditInfoUserCase } from "../use-cases/User-cases/Edit-info-user-case";
 import { FindUserByTokenCase } from "../use-cases/User-cases/Find-user-by-token-case";
-import { BCryptContract } from "../../infra/adapters/Bcrypt-contract";
-import { JwtContract } from "../../infra/adapters/Jwt-contract";
-import { UserContract } from "../repositories/User-contract";
+import { UserRepository } from "../repositories/mongoose/User-repository";
+import { JwtAdapter } from "../../infra/adapters/JwtAdapter/Jwt-adapter";
+import { BCryptAdapter } from "../../infra/adapters/BcryptAdapter/Bcrypt-adapter";
+
+const userRepository = new UserRepository()
+const jwt = new JwtAdapter();
+const bcrypt = new BCryptAdapter();
 
 export class UserControllers {
-  constructor(
-    private readonly userRepository: UserContract,
-		private readonly jwt: JwtContract,
-		private readonly bcrypt: BCryptContract,
-  ){};
-
 	async create(req: Request, res: Response): Promise<Response> {
 		const { name, email, password } = req.body;
 
-		const createUser = new CreateUserCase(this.userRepository, this.bcrypt);
+		const createUser = new CreateUserCase(userRepository, bcrypt);
 
 		const result = await createUser.create({
 			name,
@@ -26,7 +24,7 @@ export class UserControllers {
 			password,
 		});	
 
-		return res.status(201).json(result?.message);
+		return res.status(result.statusCode).json(result.message);
 	}
 
 	// async edit(request: Request, response: Response): Promise<Response> {}
