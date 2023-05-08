@@ -31,22 +31,24 @@ export class UserLoginCase {
 				throw new UserError("Senha incorreta.", 406);
 			}
 
-      const generateTokenJwt = this.jwtContract.generateToken({
-        userId: user._id,
-        role: user.role,
-      });
+			const generateTokenJwt = this.jwtContract.generateToken({
+				userId: user._id,
+				role: user.role,
+			});
 
-      return {
-        statusCode: 200,
-        token: generateTokenJwt,
-      };
-		} catch (error) {
-      if (error instanceof ZodError) {
-        throw new UserError(error.issues[0].message, 406);
-      }
-      if (error instanceof UserError) {
-        throw new UserError(error.message, error.statusCode)
-      }
-    }
+			return {
+				statusCode: 200,
+				token: generateTokenJwt,
+			};
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			if (error instanceof ZodError) {
+				throw new UserError(error.issues[0].message, 406);
+			}
+			if (error instanceof UserError) {
+				throw new UserError(error.message, error.statusCode);
+			}
+			throw new Error(error.message);
+		}
 	}
 }

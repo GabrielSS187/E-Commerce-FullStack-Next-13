@@ -22,6 +22,7 @@ export class CreateUserCase {
 				createUserSchema.parse(request);
 
 			const userEmail = await this.userContract.findUser({ email });
+
 			if (userEmail) {
 				throw new UserError(
 					"Já existe um usuário cadastrado com esse email.",
@@ -43,13 +44,15 @@ export class CreateUserCase {
 				message: "Usuário criado com sucesso.",
 				statusCode: 201,
 			};
-		} catch (error) {
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
 			if (error instanceof ZodError) {
 				throw new UserError(error.issues[0].message, 406);
 			}
 			if (error instanceof UserError) {
 				throw new UserError(error.message, error.statusCode);
 			}
+			throw new Error(error.message);
 		}
 	}
 }

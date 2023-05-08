@@ -27,13 +27,15 @@ export class FindUserByTokenCase {
 				statusCode: 200,
 				user,
 			};
-		} catch (error) {
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
 			if (error instanceof JsonWebTokenError) {
 				throw new UserError(error.message, 401);
 			}
 			if (error instanceof UserError) {
 				throw new UserError(error.message, error.statusCode);
 			}
+			throw new Error(error.message);
 		}
 	}
 }
