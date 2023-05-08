@@ -2,11 +2,10 @@ import { Request, Response, NextFunction } from "express";
 import { app } from "./infra/config/server";
 import "express-async-errors";
 
-import { CustomError } from "./errors/CustomError";
+import { userRouter } from "./modules/routes/User-routes";
+import { CustomError } from "./modules/errors/CustomError";
 
-app.get("/", (req: Request, res: Response) => {
-	return res.status(200).send("AAAAAAAA");
-});
+app.use("/user", userRouter);
 
 //* Errors assíncronos ===================================================
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
