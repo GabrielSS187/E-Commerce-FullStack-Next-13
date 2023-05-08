@@ -3,6 +3,7 @@ import { CreateUserCase } from "../use-cases/User-cases/Create-user-case";
 import { UserLoginCase } from "../use-cases/User-cases/User-login-case";
 import { CreateMoreUserInfoCase } from "../use-cases/User-cases/Create-more-user-info-case";
 import { EditInfoUserCase } from "../use-cases/User-cases/Edit-info-user-case";
+import { DeleteUserCase } from "../use-cases/User-cases/Delete-user-case";
 import { FindUserByTokenCase } from "../use-cases/User-cases/Find-user-by-token-case";
 import { UserRepository } from "../repositories/mongoose/User-repository";
 import { JwtAdapter } from "../../infra/adapters/JwtAdapter/Jwt-adapter";
@@ -61,6 +62,18 @@ export class UserControllers {
 
 		return res.status(result.statusCode).json(result.message);
 	}
+
+	async delete(req: Request, res: Response){
+		const { idUser } = req;
+
+		const deleteUserCase = new DeleteUserCase(
+			userRepository,
+		);
+
+		const result = await deleteUserCase.delete({ idUser });
+
+		return res.status(result.statusCode).json(result.message);
+	};
 
 	async login(req: Request, res: Response): Promise<Response> {
 		const { email, password } = req.body;
