@@ -27,7 +27,6 @@ const sutFactory = () => {
 	);
 	const sutEditInfoUserCase = new EditInfoUserCase(
 		userRepositoryInMemory,
-		jwt,
 		bcrypt,
 	);
 
@@ -76,13 +75,12 @@ describe("", async () => {
 		email: newUser.email,
 		password: newUser.password,
 	});
+	const decryptToken = jwt.getToken({ token: resUserLogin.token });
 
 	it("must edit user without throwing errors.", async () => {
 		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
-		const spyJwt = vi.spyOn(jwt, "getToken");
 
-		// rome-ignore lint/style/noNonNullAssertion: <explanation>
-		const result = await sutEditInfoUserCase.edit(resUserLogin!.token, {
+		const result = await sutEditInfoUserCase.edit(decryptToken.userId, {
 			name: "Edit Test",
 			userMoreInfo: {
 				city: "Edite Cidade Teste",
@@ -95,19 +93,16 @@ describe("", async () => {
 		});
 		expect(user?.name).toBe("Edit Test");
 		expect(user?.userMoreInfo?.city).toBe("Edite Cidade Teste");
-		expect(spyJwt).toHaveBeenCalledOnce();
 		expect(spyBcrypt).not.toHaveBeenCalledOnce();
 
-		expect.assertions(5);
+		expect.assertions(4);
 	});
 
 	it("should throw an error if the properties: photo_url, name, email, password exist but have no value.", async () => {
 		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
-		const spyJwt = vi.spyOn(jwt, "getToken");
 
 		try {
-			// rome-ignore lint/style/noNonNullAssertion: <explanation>
-			await sutEditInfoUserCase.edit(resUserLogin!.token!, {
+			await sutEditInfoUserCase.edit(decryptToken.userId, {
 				password: "",
 			});
 			throw new Error("Teste failed");
@@ -118,19 +113,16 @@ describe("", async () => {
 			expect(error.message).toBe("O mínimo de caracteres da senha é 6.");
 		}
 
-		expect(spyJwt).toHaveBeenCalledOnce();
 		expect(spyBcrypt).not.toHaveBeenCalledOnce();
 
-		expect.assertions(5);
+		expect.assertions(4);
 	});
 
 	it("should throw an error if the properties of obj: userMoreInfo, exist but do not have values.", async () => {
 		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
-		const spyJwt = vi.spyOn(jwt, "getToken");
 
 		try {
-			// rome-ignore lint/style/noNonNullAssertion: <explanation>
-			await sutEditInfoUserCase.edit(resUserLogin!.token!, {
+			await sutEditInfoUserCase.edit(decryptToken.userId, {
 				userMoreInfo: {
 					city: "",
 				},
@@ -143,20 +135,17 @@ describe("", async () => {
 			expect(error.message).toBe("Cidade no mínimo 2 caracteres.");
 		}
 
-		expect(spyJwt).toHaveBeenCalledOnce();
 		expect(spyBcrypt).not.toHaveBeenCalledOnce();
 
-		expect.assertions(5);
+		expect.assertions(4);
 	});
 
 	it("must call the function: hashEncrypt, if there is a new password.", async () => {
 		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
-		const spyJwt = vi.spyOn(jwt, "getToken");
 
 		//* Antes
-		const copyUser = { ...user };
-		// rome-ignore lint/style/noNonNullAssertion: <explanation>
-		const result = await sutEditInfoUserCase.edit(resUserLogin!.token!, {
+		const copyUser = { ...user }
+		const result = await sutEditInfoUserCase.edit(decryptToken.userId, {
 			//* Depois
 			password: "17171jA/",
 		});
@@ -166,67 +155,16 @@ describe("", async () => {
 			message: "Informações editadas com sucesso.",
 		});
 		expect(user?.password).not.toBe(copyUser.password);
-		expect(spyJwt).toHaveBeenCalledOnce();
 		expect(spyBcrypt).toHaveBeenCalledOnce();
 
-		expect.assertions(4);
-	});
-
-	it("should throw an error if it doesn't have a JWT token.", async () => {
-		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
-		const spyJwt = vi.spyOn(jwt, "getToken");
-
-		try {
-			await sutEditInfoUserCase.edit("", {
-				userMoreInfo: {
-					city: "João Pessoa",
-				},
-			});
-			throw new Error("Teste failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
-		} catch (error: any) {
-			expect(error).instanceOf(UserError);
-			expect(error.statusCode).toBe(401);
-			expect(error.message).toBe("Token JWT obrigatório.");
-		}
-
-		expect(spyJwt).not.toHaveBeenCalledOnce();
-		expect(spyBcrypt).not.toHaveBeenCalledOnce();
-
-		expect.assertions(5);
-	});
-
-	it("should throw an error if the JWT token is invalid or expired.", async () => {
-		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
-		const spyJwt = vi.spyOn(jwt, "getToken");
-
-		try {
-			await sutEditInfoUserCase.edit("Toke_Invalid", {
-				userMoreInfo: {
-					city: "João Pessoa",
-				},
-			});
-			throw new Error("Teste failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
-		} catch (error: any) {
-			expect(error).instanceOf(UserError);
-			expect(error.statusCode).toBe(401);
-			expect(error.message).toBeDefined();
-		}
-
-		expect(spyJwt).toHaveBeenCalledOnce();
-		expect(spyBcrypt).not.toHaveBeenCalledOnce();
-
-		expect.assertions(5);
+		expect.assertions(3);
 	});
 
 	it("it should throw an error if the new email already exists.", async () => {
 		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
-		const spyJwt = vi.spyOn(jwt, "getToken");
 
 		try {
-			// rome-ignore lint/style/noNonNullAssertion: <explanation>
-			await sutEditInfoUserCase.edit(resUserLogin!.token!, {
+			await sutEditInfoUserCase.edit(decryptToken.userId, {
 				email: "gabriel@gmail.com",
 			});
 			throw new Error("Teste failed");
@@ -239,19 +177,16 @@ describe("", async () => {
 			);
 		}
 
-		expect(spyJwt).toHaveBeenCalledOnce();
 		expect(spyBcrypt).not.toHaveBeenCalledOnce();
 
-		expect.assertions(5);
+		expect.assertions(4);
 	});
 
 	it("should throw an error with the cell phone number not following the regex pattern.", async () => {
 		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
-		const spyJwt = vi.spyOn(jwt, "getToken");
 
 		try {
-			// rome-ignore lint/style/noNonNullAssertion: <explanation>
-			await sutEditInfoUserCase.edit(resUserLogin!.token!, {
+			await sutEditInfoUserCase.edit(decryptToken.userId, {
 				userMoreInfo: { phone: "982715054" },
 			});
 			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -261,19 +196,16 @@ describe("", async () => {
 			expect(error.statusCode).toBe(406);
 		}
 
-		expect(spyJwt).toHaveBeenCalledOnce();
 		expect(spyBcrypt).not.toHaveBeenCalledOnce();
 
-		expect.assertions(5);
+		expect.assertions(4);
 	});
 
 	it("should throw an error if the zip code doesn't follow the regex pattern.", async () => {
 		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
-		const spyJwt = vi.spyOn(jwt, "getToken");
 
 		try {
-			// rome-ignore lint/style/noNonNullAssertion: <explanation>
-			await sutEditInfoUserCase.edit(resUserLogin!.token!, {
+			await sutEditInfoUserCase.edit(decryptToken.userId, {
 				userMoreInfo: { zipCode: "cep_invalido" },
 			});
 			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -283,19 +215,16 @@ describe("", async () => {
 			expect(error.statusCode).toBe(406);
 		}
 
-		expect(spyJwt).toHaveBeenCalledOnce();
 		expect(spyBcrypt).not.toHaveBeenCalledOnce();
 
-		expect.assertions(5);
+		expect.assertions(4);
 	});
 
 	it("Should throw one in case the email doesn't follow the correct pattern.", async () => {
 		const spyBcrypt = vi.spyOn(bcrypt, "hashEncrypt");
-		const spyJwt = vi.spyOn(jwt, "getToken");
 
 		try {
-			// rome-ignore lint/style/noNonNullAssertion: <explanation>
-			await sutEditInfoUserCase.edit(resUserLogin!.token!, {
+			await sutEditInfoUserCase.edit(decryptToken.userId, {
 				email: "email_invalido",
 			});
 			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -305,9 +234,8 @@ describe("", async () => {
 			expect(error.statusCode).toBe(406);
 		}
 
-		expect(spyJwt).toHaveBeenCalledOnce();
 		expect(spyBcrypt).not.toHaveBeenCalledOnce();
 
-		expect.assertions(5);
+		expect.assertions(4);
 	});
 });

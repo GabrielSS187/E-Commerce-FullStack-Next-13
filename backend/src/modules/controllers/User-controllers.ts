@@ -8,7 +8,7 @@ import { UserRepository } from "../repositories/mongoose/User-repository";
 import { JwtAdapter } from "../../infra/adapters/JwtAdapter/Jwt-adapter";
 import { BCryptAdapter } from "../../infra/adapters/BcryptAdapter/Bcrypt-adapter";
 
-const userRepository = new UserRepository()
+const userRepository = new UserRepository();
 const jwt = new JwtAdapter();
 const bcrypt = new BCryptAdapter();
 
@@ -22,12 +22,45 @@ export class UserControllers {
 			name,
 			email,
 			password,
-		});	
+		});
 
 		return res.status(result.statusCode).json(result.message);
 	}
 
-	// async edit(request: Request, response: Response): Promise<Response> {}
+	async edit(req: Request, res: Response): Promise<Response> {
+		const { idUser } = req;
+		const {
+			photo_url,
+			name,
+			email,
+			password,
+			phone,
+			zipCode,
+			address,
+			city,
+			state,
+			country,
+		} = req.body;
+
+		const editInfoUserCase = new EditInfoUserCase(userRepository, bcrypt);
+
+		const result = await editInfoUserCase.edit(idUser, {
+			photo_url,
+			name,
+			email,
+			password,
+			userMoreInfo: {
+				phone,
+				zipCode,
+				address,
+				city,
+				state,
+				country,
+			},
+		});
+
+		return res.status(result.statusCode).json(result.message);
+	}
 
 	// async login(request: Request, response: Response): Promise<Response> {}
 

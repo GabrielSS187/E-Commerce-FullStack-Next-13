@@ -9,21 +9,12 @@ import { UserError } from "../../errors/User-error";
 export class EditInfoUserCase {
 	constructor(
 		private readonly userContract: UserContract,
-		private readonly jwtContract: JwtContract,
 		private readonly bcryptContract: BCryptContract,
 	) {}
 
-	async edit(token: string, request: TEditInfoUserRequest) {
+	async edit(idUser: string, request: TEditInfoUserRequest) {
 		try {
-			if (token.length === 0) {
-				throw new UserError("Token JWT obrigatório.", 401);
-			}
-
-			const decryptTokenJwt = this.jwtContract.getToken({ token });
-
-			const user = await this.userContract.findUser({
-				idUser: decryptTokenJwt.userId,
-			});
+			const user = await this.userContract.findUser({ idUser });
 			if (!user) throw new UserError("Usuário não encontrado.", 404);
 
 			const { photo_url, name, email, password, userMoreInfo } =
@@ -45,7 +36,7 @@ export class EditInfoUserCase {
 			}
 
 			await this.userContract.edit({
-				idUser: decryptTokenJwt.userId,
+				idUser,
 				newData: {
 					photo_url,
 					name,
