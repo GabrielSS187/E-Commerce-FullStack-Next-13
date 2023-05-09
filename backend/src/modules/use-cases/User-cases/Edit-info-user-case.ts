@@ -2,7 +2,7 @@ import { ZodError } from "zod";
 import { JsonWebTokenError } from "jsonwebtoken";
 import { UserContract } from "../../repositories/User-contract";
 import { BCryptContract } from "../../../infra/adapters/Bcrypt-contract";
-import { JwtContract } from "../../../infra/adapters/Jwt-contract";
+import { AwsS3Contract } from "../../../infra/adapters/AwsS3-contract";
 import { TEditInfoUserRequest, editInfoUserSchema } from "./schemas";
 import { UserError } from "../../errors/User-error";
 
@@ -10,6 +10,7 @@ export class EditInfoUserCase {
 	constructor(
 		private readonly userContract: UserContract,
 		private readonly bcryptContract: BCryptContract,
+		private readonly awsS3Contract: AwsS3Contract,
 	) {}
 
 	async edit(idUser: string, request: TEditInfoUserRequest) {
@@ -27,6 +28,17 @@ export class EditInfoUserCase {
 						"Já existe um usuário cadastrado com esse email.",
 						409,
 					);
+				}
+			}
+
+			if (photo_url) {
+				// rome-ignore lint/style/noNonNullAssertion: <explanation>
+				if (user.photo_url.includes(process.env.AWS_URL!)) {
+					const fileName = user.photo_url?.replace(
+						`${process.env.AWS_URL}/`,
+						"",
+					);
+					await this.awsS3Contract.deleteFile(fileName);
 				}
 			}
 

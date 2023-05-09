@@ -1,10 +1,10 @@
 import { GetObjectCommandOutput } from "@aws-sdk/client-s3";
-import { StorageEngine, Multer } from "multer";
+import { Multer } from "multer";
 
 export abstract class AwsS3Contract {
 	abstract saveFile: Multer;
-	abstract deleteFile: (filename: Express.Multer.File) => Promise<void>;
+	abstract deleteFile: (filename: string) => Promise<void>;
 	abstract getFile: (
-		filename: Express.Multer.File,
-	) => Promise<GetObjectCommandOutput>;
+		filename: string,
+	) => Promise<GetObjectCommandOutput | null>;
 }
