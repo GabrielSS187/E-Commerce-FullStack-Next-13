@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+import { env } from "process";
+import { config } from "dotenv";
 import { CreateUserCase } from "../use-cases/User-cases/Create-user-case";
 import { UserLoginCase } from "../use-cases/User-cases/User-login-case";
 import { CreateMoreUserInfoCase } from "../use-cases/User-cases/Create-more-user-info-case";
@@ -8,10 +10,14 @@ import { FindUserByTokenCase } from "../use-cases/User-cases/Find-user-by-token-
 import { UserRepository } from "../repositories/mongoose/User-repository";
 import { JwtAdapter } from "../../infra/adapters/JwtAdapter/Jwt-adapter";
 import { BCryptAdapter } from "../../infra/adapters/BcryptAdapter/Bcrypt-adapter";
+import { AwsS3Adapter } from "../../infra/adapters/AwsS3-adapter/AwsS3-adapter";
+
+config();
 
 const userRepository = new UserRepository();
 const jwt = new JwtAdapter();
 const bcrypt = new BCryptAdapter();
+const awsS3 = new AwsS3Adapter();
 
 export class UserControllers {
 	async create(req: Request, res: Response): Promise<Response> {
@@ -30,7 +36,7 @@ export class UserControllers {
 
 	async edit(req: Request, res: Response): Promise<Response> {
 		const { idUser } = req;
-		const {
+		let {
 			photo_url,
 			name,
 			email,
@@ -43,7 +49,16 @@ export class UserControllers {
 			country,
 		} = req.body;
 
-		const editInfoUserCase = new EditInfoUserCase(userRepository, bcrypt);
+		if (req.file) {
+			const requestPhoto: Express.Multer.File = req.file;
+			photo_url = `${env.AWS_URL}/${requestPhoto.originalname}`;
+		}
+
+		const editInfoUserCase = new EditInfoUserCase(
+			userRepository,
+			bcrypt,
+			awsS3,
+		);
 
 		const result = await editInfoUserCase.edit(idUser, {
 			photo_url,
@@ -63,17 +78,15 @@ export class UserControllers {
 		return res.status(result.statusCode).json(result.message);
 	}
 
-	async delete(req: Request, res: Response){
+	async delete(req: Request, res: Response) {
 		const { idUser } = req;
 
-		const deleteUserCase = new DeleteUserCase(
-			userRepository,
-		);
+		const deleteUserCase = new DeleteUserCase(userRepository, awsS3);
 
 		const result = await deleteUserCase.delete({ idUser });
 
 		return res.status(result.statusCode).json(result.message);
-	};
+	}
 
 	async login(req: Request, res: Response): Promise<Response> {
 		const { email, password } = req.body;
