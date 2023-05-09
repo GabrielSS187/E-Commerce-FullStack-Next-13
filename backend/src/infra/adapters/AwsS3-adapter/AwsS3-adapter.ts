@@ -1,6 +1,7 @@
 import { env } from "process";
 import { config } from "dotenv";
 import multerS3 from "multer-s3";
+import multer from "multer";
 import { S3 } from "@aws-sdk/client-s3";
 
 import { AwsS3Contract } from "../AwsS3-contract";
@@ -29,19 +30,38 @@ const s3 = new S3({
 });
 
 export class AwsS3Adapter implements AwsS3Contract {
-	saveFile = multerS3({
-		s3,
-		// rome-ignore lint/style/noNonNullAssertion: <explanation>
-		bucket: env.AWS_S3_BUCKET!,
-		acl: "public-read",
-		key: (
-			req: Express.Request,
-			file: Express.Multer.File,
-			cb: (error: Error | null, key?: string) => void,
-		) => {
-			cb(null, `${Date.now()}-${file.originalname}`);
-		},
+	saveFile = multer({
+		storage: multerS3({
+			s3,
+			// rome-ignore lint/style/noNonNullAssertion: <explanation>
+			bucket: env.AWS_S3_BUCKET!,
+			acl: "public-read",
+			contentType: multerS3.AUTO_CONTENT_TYPE,
+			key: (
+				req: Express.Request,
+				file: Express.Multer.File,
+				cb: (error: Error | null, key?: string) => void,
+			) => {
+				cb(null, `${Date.now()}-${file.originalname}`);
+			},
+		}),
+		limits: { fileSize: 1024 * 1024 * 5 }, //* Limite de 5MB
 	});
+
+	async getFile(filename: Express.Multer.File) {
+		try {
+			const getParams = {
+				Bucket: env.AWS_S3_BUCKET,
+				Key: filename.filename,
+			};
+
+			const fileFound = await s3.getObject(getParams);
+			return fileFound;
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			throw new CustomError(error.message, 400);
+		}
+	}
 
 	async deleteFile(filename: Express.Multer.File) {
 		try {
