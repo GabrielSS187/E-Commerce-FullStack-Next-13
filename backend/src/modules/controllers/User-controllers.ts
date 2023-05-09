@@ -81,7 +81,7 @@ export class UserControllers {
 	async delete(req: Request, res: Response) {
 		const { idUser } = req;
 
-		const deleteUserCase = new DeleteUserCase(userRepository);
+		const deleteUserCase = new DeleteUserCase(userRepository, awsS3);
 
 		const result = await deleteUserCase.delete({ idUser });
 
