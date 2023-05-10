@@ -28,10 +28,11 @@ const CreateMoreUserInfo = new Schema({
 	country: { type: String, required: true },
 });
 
-export const User = {
-	create: mongoose.model<TCreateUserDTO>("User", CreateUserSchema),
-	createMoreInfo: mongoose.model<TUserMoreInfoDTO>(
-		"User_More_Info",
-		CreateMoreUserInfo,
-	),
-};
+export const UserSchema = mongoose.model<TCreateUserDTO>(
+	"User",
+	CreateUserSchema,
+);
+export const CreateMoreInfoSchema = mongoose.model<TUserMoreInfoDTO>(
+	"User_More_Info",
+	CreateMoreUserInfo,
+);
