@@ -2,9 +2,8 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import cors, { CorsOptions } from "cors";
 import { AddressInfo } from "net";
 import { config } from "dotenv";
-import { databaseConnection } from "../database/Database-connection";
+import { databaseConnection } from "../database/database-connection";
 import logger from "pino";
-import { errors as celebrateErrors } from "celebrate";
 
 config();
 
@@ -40,8 +39,6 @@ const server = app.listen(PORT, () => {
   const loggerInstance = logger();
   loggerInstance.info(`Server is running in http://localhost:${address.port}`);
 });
-
-app.use(celebrateErrors());
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   const loggerInstance = logger();

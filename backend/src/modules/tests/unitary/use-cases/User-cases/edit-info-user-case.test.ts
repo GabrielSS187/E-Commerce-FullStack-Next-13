@@ -3,16 +3,17 @@ import { expect, describe, it, vi } from "vitest";
 import { UserRepositoryInMemory } from "../../../repositories-in-memory/User-repository-in-memory";
 import { UserLoginCase } from "../../../../use-cases/User-cases/User-login-case";
 import { CreateUserCase } from "../../../../use-cases/User-cases/Create-user-case";
-import { BCryptAdapter } from "../../../../../infra/adapters/BcryptAdapter/Bcrypt-adapter";
-import { CreateMoreUserInfoCase } from "../../../../use-cases/User-cases/Create-more-user-info-case";
+import { BCryptAdapter } from "../../../../../infra/adapters/Bcrypt-adapter/Bcrypt-adapter";
 import { EditInfoUserCase } from "../../../../use-cases/User-cases/Edit-info-user-case";
-import { JwtAdapter } from "../../../../../infra/adapters/JwtAdapter/Jwt-adapter";
+import { JwtAdapter } from "../../../../../infra/adapters/Jwt-adapter/Jwt-adapter";
+import { AwsS3Adapter } from "../../../../../infra/adapters/AwsS3-adapter/AwsS3-adapter";
 import { UserError } from "../../../../errors/User-error";
 import { usersDbMock } from "../../../database-in-memory/database-mock";
 
 const sutFactory = () => {
 	const bcrypt = new BCryptAdapter();
 	const jwt = new JwtAdapter();
+	const awsS3 = new AwsS3Adapter();
 	const userRepositoryInMemory = new UserRepositoryInMemory();
 
 	const sutUserLoginCase = new UserLoginCase(
@@ -22,19 +23,16 @@ const sutFactory = () => {
 	);
 
 	const sutCreateUserCase = new CreateUserCase(userRepositoryInMemory, bcrypt);
-	const sutCreateMoreUserInfoCase = new CreateMoreUserInfoCase(
-		userRepositoryInMemory,
-	);
 	const sutEditInfoUserCase = new EditInfoUserCase(
 		userRepositoryInMemory,
 		bcrypt,
+		awsS3,
 	);
 
 	return {
 		sutCreateUserCase,
 		sutUserLoginCase,
 		sutEditInfoUserCase,
-		sutCreateMoreUserInfoCase,
 		jwt,
 		bcrypt,
 	};
@@ -47,7 +45,6 @@ describe("", async () => {
 		sutCreateUserCase,
 		sutEditInfoUserCase,
 		sutUserLoginCase,
-		sutCreateMoreUserInfoCase,
 	} = sutFactory();
 
 	// rome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -55,13 +52,6 @@ describe("", async () => {
 		name: "Test Silva",
 		email: "test@test.com",
 		password: "12345bB/",
-	};
-	await sutCreateUserCase.create(newUser);
-	const user = usersDbMock.find((user) => user.email === newUser.email);
-
-	// rome-ignore lint/suspicious/noExplicitAny: <explanation>
-	const newInfo: any = {
-		userId: user?._id,
 		address: "Rua test, 123",
 		city: "Cidade Test",
 		country: "br",
@@ -70,7 +60,9 @@ describe("", async () => {
 		zipCode: "55555555",
 	};
 
-	await sutCreateMoreUserInfoCase.create(newInfo);
+	await sutCreateUserCase.create(newUser);
+	const user = usersDbMock.find((user) => user.email === newUser.email);
+
 	const resUserLogin = await sutUserLoginCase.login({
 		email: newUser.email,
 		password: newUser.password,
@@ -82,9 +74,7 @@ describe("", async () => {
 
 		const result = await sutEditInfoUserCase.edit(decryptToken.userId, {
 			name: "Edit Test",
-			userMoreInfo: {
-				city: "Edite Cidade Teste",
-			},
+			city: "Edite Cidade Teste",
 		});
 
 		expect(result).toEqual({
@@ -96,6 +86,8 @@ describe("", async () => {
 		expect(spyBcrypt).not.toHaveBeenCalledOnce();
 
 		expect.assertions(4);
+		
+		spyBcrypt.mockRestore();
 	});
 
 	it("should throw an error if the properties: photo_url, name, email, password exist but have no value.", async () => {
@@ -116,6 +108,8 @@ describe("", async () => {
 		expect(spyBcrypt).not.toHaveBeenCalledOnce();
 
 		expect.assertions(4);
+
+		spyBcrypt.mockRestore();
 	});
 
 	it("should throw an error if the properties of obj: userMoreInfo, exist but do not have values.", async () => {
@@ -123,9 +117,7 @@ describe("", async () => {
 
 		try {
 			await sutEditInfoUserCase.edit(decryptToken.userId, {
-				userMoreInfo: {
-					city: "",
-				},
+				city: "",
 			});
 			throw new Error("Teste failed");
 			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -138,6 +130,8 @@ describe("", async () => {
 		expect(spyBcrypt).not.toHaveBeenCalledOnce();
 
 		expect.assertions(4);
+
+		spyBcrypt.mockRestore();
 	});
 
 	it("must call the function: hashEncrypt, if there is a new password.", async () => {
@@ -158,6 +152,8 @@ describe("", async () => {
 		expect(spyBcrypt).toHaveBeenCalledOnce();
 
 		expect.assertions(3);
+
+		spyBcrypt.mockRestore();
 	});
 
 	it("it should throw an error if the new email already exists.", async () => {
@@ -180,6 +176,8 @@ describe("", async () => {
 		expect(spyBcrypt).not.toHaveBeenCalledOnce();
 
 		expect.assertions(4);
+
+		spyBcrypt.mockRestore();
 	});
 
 	it("should throw an error with the cell phone number not following the regex pattern.", async () => {
@@ -187,7 +185,7 @@ describe("", async () => {
 
 		try {
 			await sutEditInfoUserCase.edit(decryptToken.userId, {
-				userMoreInfo: { phone: "982715054" },
+				phone: "982715054",
 			});
 			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
@@ -199,6 +197,8 @@ describe("", async () => {
 		expect(spyBcrypt).not.toHaveBeenCalledOnce();
 
 		expect.assertions(4);
+
+		spyBcrypt.mockRestore();
 	});
 
 	it("should throw an error if the zip code doesn't follow the regex pattern.", async () => {
@@ -206,7 +206,7 @@ describe("", async () => {
 
 		try {
 			await sutEditInfoUserCase.edit(decryptToken.userId, {
-				userMoreInfo: { zipCode: "cep_invalido" },
+				zipCode: "cep_invalido",
 			});
 			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
@@ -218,6 +218,8 @@ describe("", async () => {
 		expect(spyBcrypt).not.toHaveBeenCalledOnce();
 
 		expect.assertions(4);
+
+		spyBcrypt.mockRestore();
 	});
 
 	it("Should throw one in case the email doesn't follow the correct pattern.", async () => {
@@ -237,5 +239,7 @@ describe("", async () => {
 		expect(spyBcrypt).not.toHaveBeenCalledOnce();
 
 		expect.assertions(4);
+
+		spyBcrypt.mockRestore();
 	});
 });

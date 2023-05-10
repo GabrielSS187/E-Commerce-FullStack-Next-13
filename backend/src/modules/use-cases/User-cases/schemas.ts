@@ -31,17 +31,6 @@ export const createUserSchema = z.object({
 		})
 		.max(8, { message: "O máxima de caracteres da senha é 8." }),
 	role: string().trim().optional().default("normal"),
-});
-
-export const loginUserSchema = z.object({
-	email: string({ required_error: "Email obrigatório." })
-		.trim()
-		.email({ message: "Email invalido." }),
-	password: string({ required_error: "Senha obrigatória." }).trim(),
-});
-
-export const createMoreUserInfoSchema = z.object({
-	userId: string({ required_error: "userId obrigatório." }).trim(),
 	phone: string({ required_error: "Número de celular obrigatório." })
 		.trim()
 		.regex(regexValidatePhone, {
@@ -69,14 +58,16 @@ export const createMoreUserInfoSchema = z.object({
 		.transform((srt) => srt.toLocaleUpperCase()),
 });
 
+export const loginUserSchema = z.object({
+	email: string({ required_error: "Email obrigatório." })
+		.trim()
+		.email({ message: "Email invalido." }),
+	password: string({ required_error: "Senha obrigatória." }).trim(),
+});
+
 export const editInfoUserSchema = createUserSchema
-	.omit({ role: true })
-	.extend({ userMoreInfo: createMoreUserInfoSchema.omit({ userId: true }).partial() })
-	.partial();
+	.omit({ role: true }).partial();
 
 export type TCreateUserRequest = z.infer<typeof createUserSchema>;
 export type TLoginUserRequest = z.infer<typeof loginUserSchema>;
-export type TCreateMoreUserInfoRequest = z.infer<
-	typeof createMoreUserInfoSchema
->;
 export type TEditInfoUserRequest = z.infer<typeof editInfoUserSchema>;

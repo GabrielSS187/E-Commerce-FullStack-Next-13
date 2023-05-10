@@ -11,7 +11,7 @@ import {
 import { usersDbMock } from "../../../database-in-memory/database-mock";
 import { UserRepositoryInMemory } from "../../../repositories-in-memory/User-repository-in-memory";
 import { CreateUserCase } from "../../../../use-cases/User-cases/Create-user-case";
-import { BCryptAdapter } from "../../../../../infra/adapters/BcryptAdapter/Bcrypt-adapter";
+import { BCryptAdapter } from "../../../../../infra/adapters/Bcrypt-adapter/Bcrypt-adapter";
 import { UserError } from "../../../../errors/User-error";
 
 describe("Tests in the file Create-user-case.", () => {
@@ -36,6 +36,12 @@ describe("Tests in the file Create-user-case.", () => {
 		name: "Test Silva",
 		email: "test@test.com",
 		password: "12345bB/",
+		address: "Rua test, 123",
+		city: "Cidade Test",
+		country: "br",
+		phone: "83982715054",
+		state: "sp",
+		zipCode: "55555555",
 	};
 
 	it("should create a user without errors.", async () => {
@@ -57,8 +63,13 @@ describe("Tests in the file Create-user-case.", () => {
 		expect(user).toHaveProperty("role");
 		expect(user?.role).toBe("normal");
 		expect(user?.password).toBe("hashedPassword");
+		expect(user?.userMoreInfo).toBeDefined();
+		expect(user?.userMoreInfo).toHaveProperty("_id");
+		expect(user?.userMoreInfo?.phone.substring(0, 3)).toBe("+55");
+		expect(user?.userMoreInfo?.state).toBe("SP");
+		expect(user?.userMoreInfo?.country).toBe("BR");
 
-		expect.assertions(12);
+		expect.assertions(17);
 	});
 
 	it("Should throw an error if the email already exists.", async () => {
@@ -227,5 +238,91 @@ describe("Tests in the file Create-user-case.", () => {
 		expect(usersDbMock).toHaveLength(4)
 
 		expect.assertions(5);
+	});
+
+	it("should throw an error with the cell phone number not following the regex pattern.", async () => {
+		newUser["name"] = "Test Silva"
+		newUser["password"] = "12345bB/";
+		newUser["phone"] = "982715054";
+
+		try {
+			await sutCreateUserCase.create(newUser);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe("Esse número de celular não é valido.");
+			expect(error.statusCode).toBe(406);
+		}
+
+		expect.assertions(3);
+	});
+
+	it("should throw an error if the zip code doesn't follow the regex pattern.", async () => {
+		newUser["phone"] = "83982715054";
+		newUser["zipCode"] = "55ab5a55"
+
+		try {
+			await sutCreateUserCase.create(newUser);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe("Cep invalido.");
+			expect(error.statusCode).toBe(406);
+		}
+
+		expect.assertions(3);
+	});
+
+	it("should throw an error if the state or country are greater than 2 characters.", async () => {
+		newUser["state"] = "ABCDE";
+		newUser["zipCode"] = "55555555";
+
+		try {
+			await sutCreateUserCase.create(newUser);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe("Estado o máximo de caracteres é 2.");
+			expect(error.statusCode).toBe(406);
+		}
+
+		expect.assertions(3);
+	});
+
+	it("should throw an error if the address, city, state and country are less than 2 characters.", async () => {
+		newUser["country"] = "Z";
+		newUser["state"] = "AB";
+
+		try {
+			await sutCreateUserCase.create(newUser);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe("País o mínimo de caracteres é 2.");
+			expect(error.statusCode).toBe(406);
+		}
+
+		expect.assertions(3);
+	});
+
+	it("should throw an error if any property is missing.", async () => {
+		newUser["country"] = "ZA";
+		newUser["address"] = undefined;
+
+		try {
+			await sutCreateUserCase.create(newUser);
+			throw new Error("Test failed");
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			expect(error).instanceOf(UserError);
+			expect(error.message).toBe("Endereço obrigatório.");
+			expect(error.statusCode).toBe(406);
+		}
+
+		expect.assertions(3);
 	});
 });

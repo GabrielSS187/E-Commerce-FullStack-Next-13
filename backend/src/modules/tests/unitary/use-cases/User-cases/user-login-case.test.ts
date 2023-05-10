@@ -8,8 +8,8 @@ import {
 import { UserRepositoryInMemory } from "../../../repositories-in-memory/User-repository-in-memory";
 import { UserLoginCase } from "../../../../use-cases/User-cases/User-login-case";
 import { CreateUserCase } from "../../../../use-cases/User-cases/Create-user-case";
-import { BCryptAdapter } from "../../../../../infra/adapters/BcryptAdapter/Bcrypt-adapter";
-import { JwtAdapter } from "../../../../../infra/adapters/JwtAdapter/Jwt-adapter";
+import { BCryptAdapter } from "../../../../../infra/adapters/Bcrypt-adapter/Bcrypt-adapter";
+import { JwtAdapter } from "../../../../../infra/adapters/Jwt-adapter/Jwt-adapter";
 import { UserError } from "../../../../errors/User-error";
 
 const sutFactory = () => {
@@ -41,6 +41,12 @@ describe("Test in the file User-login-case.", () => {
 		name: "Test Silva",
 		email: "test@test.com",
 		password: "12345bB/",
+		address: "Rua test, 123",
+		city: "Cidade Test",
+		country: "br",
+		phone: "83982715054",
+		state: "sp",
+		zipCode: "55555555",
 	};
 
 	// rome-ignore lint/suspicious/noExplicitAny: <explanation>
