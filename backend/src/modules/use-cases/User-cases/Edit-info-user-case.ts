@@ -18,8 +18,18 @@ export class EditInfoUserCase {
 			const user = await this.userContract.findUser({ idUser });
 			if (!user) throw new UserError("Usuário não encontrado.", 404);
 
-			const { photo_url, name, email, password, userMoreInfo } =
-				editInfoUserSchema.parse(request);
+			const {
+				photo_url,
+				name,
+				email,
+				password,
+				phone,
+				zipCode,
+				address,
+				city,
+				state,
+				country,
+			} = editInfoUserSchema.parse(request);
 
 			if (email) {
 				const user = await this.userContract.findUser({ email });
@@ -54,7 +64,14 @@ export class EditInfoUserCase {
 					name,
 					email,
 					password: newPassword,
-					userMoreInfo,
+					userMoreInfo: {
+						phone,
+						zipCode,
+						address,
+						city,
+						state,
+						country,
+					},
 				},
 			});
 

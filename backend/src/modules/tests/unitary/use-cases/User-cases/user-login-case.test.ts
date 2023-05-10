@@ -41,6 +41,12 @@ describe("Test in the file User-login-case.", () => {
 		name: "Test Silva",
 		email: "test@test.com",
 		password: "12345bB/",
+		address: "Rua test, 123",
+		city: "Cidade Test",
+		country: "br",
+		phone: "83982715054",
+		state: "sp",
+		zipCode: "55555555",
 	};
 
 	// rome-ignore lint/suspicious/noExplicitAny: <explanation>

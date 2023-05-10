@@ -8,6 +8,12 @@ type TRequest = {
 	name: string;
 	email: string;
 	password: string;
+	address: string;
+	city: string;
+	country: string;
+	phone: string;
+	state: string;
+	zipCode: string;
 };
 
 export class CreateUserCase {
@@ -18,8 +24,19 @@ export class CreateUserCase {
 
 	async create(request: TRequest) {
 		try {
-			const { photo_url, name, email, password, role } =
-				createUserSchema.parse(request);
+			const {
+				photo_url,
+				name,
+				email,
+				password,
+				role,
+				address,
+				city,
+				country,
+				phone,
+				state,
+				zipCode,
+			} = createUserSchema.parse(request);
 
 			const userEmail = await this.userContract.findUser({ email });
 			if (userEmail) {
@@ -37,6 +54,19 @@ export class CreateUserCase {
 				email,
 				password: hashPassword,
 				role,
+			});
+
+			const getNewUserByEmail = await this.userContract.findUser({ email });
+
+			await this.userContract.createMoreInfo({
+				// rome-ignore lint/style/noNonNullAssertion: <explanation>
+				userId: getNewUserByEmail?._id!,
+				address,
+				city,
+				country,
+				phone,
+				state,
+				zipCode,
 			});
 
 			return {

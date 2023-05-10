@@ -14,8 +14,6 @@ userRouter.get("/", authMiddleware, userControllers.findByToken);
 userRouter.post("/create", userControllers.create);
 userRouter.post("/login", userControllers.login);
 
-userRouter.put("/create-more-info/:idUser", userControllers.createMoreInfo);
-
 userRouter.patch(
 	"/edit",
 	// authMiddleware,

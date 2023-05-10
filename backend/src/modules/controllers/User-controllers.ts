@@ -3,7 +3,6 @@ import { env } from "process";
 import { config } from "dotenv";
 import { CreateUserCase } from "../use-cases/User-cases/Create-user-case";
 import { UserLoginCase } from "../use-cases/User-cases/User-login-case";
-import { CreateMoreUserInfoCase } from "../use-cases/User-cases/Create-more-user-info-case";
 import { EditInfoUserCase } from "../use-cases/User-cases/Edit-info-user-case";
 import { DeleteUserCase } from "../use-cases/User-cases/Delete-user-case";
 import { FindUserByTokenCase } from "../use-cases/User-cases/Find-user-by-token-case";
@@ -21,7 +20,17 @@ const awsS3 = new AwsS3Adapter();
 
 export class UserControllers {
 	async create(req: Request, res: Response): Promise<Response> {
-		const { name, email, password } = req.body;
+		const {
+			name,
+			email,
+			password,
+			address,
+			city,
+			country,
+			phone,
+			state,
+			zipCode,
+		} = req.body;
 
 		const createUser = new CreateUserCase(userRepository, bcrypt);
 
@@ -29,6 +38,12 @@ export class UserControllers {
 			name,
 			email,
 			password,
+			address,
+			city,
+			country,
+			phone,
+			state,
+			zipCode,
 		});
 
 		return res.status(result.statusCode).json(result.message);
@@ -65,14 +80,12 @@ export class UserControllers {
 			name,
 			email,
 			password,
-			userMoreInfo: {
-				phone,
-				zipCode,
-				address,
-				city,
-				state,
-				country,
-			},
+			phone,
+			zipCode,
+			address,
+			city,
+			state,
+			country,
 		});
 
 		return res.status(result.statusCode).json(result.message);
@@ -99,25 +112,6 @@ export class UserControllers {
 		});
 
 		return res.status(result.statusCode).json(result.token);
-	}
-
-	async createMoreInfo(req: Request, res: Response): Promise<Response> {
-		const { idUser } = req.params;
-		const { address, city, country, phone, state, zipCode } = req.body;
-
-		const createMoreUserInfoCase = new CreateMoreUserInfoCase(userRepository);
-
-		const result = await createMoreUserInfoCase.create({
-			userId: idUser,
-			address,
-			city,
-			country,
-			phone,
-			state,
-			zipCode,
-		});
-
-		return res.status(result.statusCode).json(result.message);
 	}
 
 	async findByToken(req: Request, res: Response): Promise<Response> {
