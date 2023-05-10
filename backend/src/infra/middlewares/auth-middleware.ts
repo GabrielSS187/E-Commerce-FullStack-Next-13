@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import { JwtAdapter } from "../adapters/JwtAdapter/Jwt-adapter";
+import { JwtAdapter } from "../adapters/Jwt-adapter/Jwt-adapter";
 import { CustomError } from "../../modules/errors/CustomError";
 import { JsonWebTokenError } from "jsonwebtoken";
 

@@ -7,8 +7,8 @@ import { EditInfoUserCase } from "../use-cases/User-cases/Edit-info-user-case";
 import { DeleteUserCase } from "../use-cases/User-cases/Delete-user-case";
 import { FindUserByTokenCase } from "../use-cases/User-cases/Find-user-by-token-case";
 import { UserRepository } from "../repositories/mongoose/User-repository";
-import { JwtAdapter } from "../../infra/adapters/JwtAdapter/Jwt-adapter";
-import { BCryptAdapter } from "../../infra/adapters/BcryptAdapter/Bcrypt-adapter";
+import { JwtAdapter } from "../../infra/adapters/Jwt-adapter/Jwt-adapter";
+import { BCryptAdapter } from "../../infra/adapters/Bcrypt-adapter/Bcrypt-adapter";
 import { AwsS3Adapter } from "../../infra/adapters/AwsS3-adapter/AwsS3-adapter";
 
 config();

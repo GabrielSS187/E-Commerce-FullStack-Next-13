@@ -11,7 +11,7 @@ import {
 import { usersDbMock } from "../../../database-in-memory/database-mock";
 import { UserRepositoryInMemory } from "../../../repositories-in-memory/User-repository-in-memory";
 import { CreateUserCase } from "../../../../use-cases/User-cases/Create-user-case";
-import { BCryptAdapter } from "../../../../../infra/adapters/BcryptAdapter/Bcrypt-adapter";
+import { BCryptAdapter } from "../../../../../infra/adapters/Bcrypt-adapter/Bcrypt-adapter";
 import { UserError } from "../../../../errors/User-error";
 
 describe("Tests in the file Create-user-case.", () => {
