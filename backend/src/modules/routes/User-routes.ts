@@ -16,7 +16,7 @@ userRouter.post("/login", userControllers.login);
 
 userRouter.patch(
 	"/edit",
-	// authMiddleware,
+	authMiddleware,
 	upload.saveFile.single("photo_url"),
 	userControllers.edit,
 );

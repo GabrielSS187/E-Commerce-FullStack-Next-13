@@ -1,55 +1,61 @@
-import { UserSchema, CreateMoreInfoSchema } from "../../models/User-models";
+import { UserSchema, UserMoreInfoSchema } from "../../models/User-models";
 import {
-	TCreateUserDTO,
-	TUserMoreInfoDTO,
-	TEditUserDTO,
-	TUserExitDataDTO,
+  TCreateUserDTO,
+  TUserMoreInfoDTO,
+  TEditUserDTO,
+  TUserExitDataDTO,
 } from "../../../dtos/user-dto";
 import { UserContract } from "../User-contract";
 
 export class UserRepository implements UserContract {
-	async create(params: TCreateUserDTO): Promise<void> {
-		await UserSchema.create(params);
-	}
+  async create(params: TCreateUserDTO): Promise<void> {
+    await UserSchema.create(params);
+  }
 
-	async createMoreInfo(params: TUserMoreInfoDTO): Promise<void> {
-		await CreateMoreInfoSchema.create(params);
-	}
+  async createMoreInfo(params: TUserMoreInfoDTO): Promise<void> {
+    await UserMoreInfoSchema.create(params);
+  }
 
-	async edit(params: { idUser: string; newData: TEditUserDTO }): Promise<void> {
-		await UserSchema.updateOne(
-			{ _id: params.idUser },
-			{ $set: params.newData },
-		);
+  async edit(params: { idUser: string; newData: TEditUserDTO }): Promise<void> {
+    await Promise.all([
+      UserSchema.updateOne({ _id: params.idUser }, { $set: params.newData }),
+      UserMoreInfoSchema.updateOne(
+        { userId: params.idUser },
+        { $set: params.newData }
+      ),
+    ]);
+  }
 
-		if (params.newData.userMoreInfo){
-			const user = await this.findUser({ idUser: params.idUser });
+  async delete(idUser: string): Promise<void> {
+    await UserSchema.deleteOne({ _id: idUser });
+  }
 
-			await CreateMoreInfoSchema.updateOne(
-				{ _id: user?.userMoreInfo?._id },
-				{ $set: params.newData.userMoreInfo },
-			);
-		}
-	}
+  async findUser(params: {
+    idUser?: string;
+    email?: string;
+  }): Promise<TUserExitDataDTO | null> {
+    if (params.email) {
+      const user = await UserSchema.findOne({ email: params.email })
+        .select("-__v")
+        .lean<TUserExitDataDTO>()
+        .exec();
+      return user;
+    }
 
-	async delete(idUser: string): Promise<void> {
-		await UserSchema.deleteOne({ _id: idUser });
-	}
+    const user = await UserSchema.findById({ _id: params.idUser })
+      .select("-__v")
+      .lean<TUserExitDataDTO>()
+      .exec();
 
-	async findUser(params: {
-		idUser?: string;
-		email?: string;
-	}): Promise<TUserExitDataDTO | null> {
-		if (params.email) {
-			const user = await UserSchema.findOne({ email: params.email })
-				.lean<TUserExitDataDTO>()
-				.exec();
-			return user;
-		}
+    const moreInfo = await UserMoreInfoSchema.findOne({ userId: user?._id })
+      .select("-__v -userId -_id")
+      .lean<TUserExitDataDTO>()
+      .exec();
 
-		const user = await UserSchema.findById(params.idUser)
-			.lean<TUserExitDataDTO>()
-			.exec();
-		return user;
-	}
+    if (!user) {
+      return null;
+    }
+
+    return { ...user, userMoreInfo: moreInfo };
+  }
 }

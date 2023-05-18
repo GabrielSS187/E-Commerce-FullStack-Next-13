@@ -1,25 +1,8 @@
-import mongoose, { Schema } from "mongoose";
-import { string } from "zod";
+import mongoose, { SaveOptions, Schema } from "mongoose";
 import { TCreateUserDTO, TUserMoreInfoDTO } from "../../dtos/user-dto";
 
-const CreateUserSchema = new Schema(
-	{
-		photo_url: { type: String, required: true },
-		name: { type: String, required: true },
-		email: { type: String, unique: true, required: true },
-		password: { type: String, required: true },
-		role: {
-			type: string,
-			enum: ["admin", "normal"],
-			default: "normal",
-			required: true,
-		},
-	},
-	{ timestamps: true },
-);
-
-const CreateMoreUserInfo = new Schema({
-	userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+const createMoreUserInfo = new mongoose.Schema({
+	userId: { type: mongoose.Schema.Types.ObjectId, ref: "users", required: true },
 	phone: { type: String, required: true },
 	zipCode: { type: String, required: true },
 	address: { type: String, required: true },
@@ -28,11 +11,32 @@ const CreateMoreUserInfo = new Schema({
 	country: { type: String, required: true },
 });
 
+const createUserSchema = new mongoose.Schema(
+	{
+		photo_url: { type: String, required: true },
+		name: { type: String, required: true },
+		email: { type: String, unique: true, required: true },
+		password: { type: String, required: true },
+		role: {
+			type: String,
+			enum: ["admin", "normal"],
+			default: "normal",
+			required: true,
+		},
+		moreInfo: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "userMoreInfos"
+		},
+	},
+	{ timestamps: true },
+);
+
+export const UserMoreInfoSchema = mongoose.model<TUserMoreInfoDTO>(
+	"userMoreInfos",
+	createMoreUserInfo,
+);
 export const UserSchema = mongoose.model<TCreateUserDTO>(
-	"User",
-	CreateUserSchema,
+	"users",
+	createUserSchema,
 );
-export const CreateMoreInfoSchema = mongoose.model<TUserMoreInfoDTO>(
-	"User_More_Info",
-	CreateMoreUserInfo,
-);
+	

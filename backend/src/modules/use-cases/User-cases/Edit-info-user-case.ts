@@ -64,14 +64,12 @@ export class EditInfoUserCase {
 					name,
 					email,
 					password: newPassword,
-					userMoreInfo: {
-						phone,
-						zipCode,
-						address,
-						city,
-						state,
-						country,
-					},
+					phone,
+					zipCode,
+					address,
+					city,
+					state,
+					country,
 				},
 			});
 
