@@ -11,6 +11,6 @@ app.use("/user", userRouter);
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 	return error instanceof CustomError
-		? res.status(error.statusCode).send(error.message)
-		: res.status(500).send(error.message || error.pgMessage);
+		? res.status(error.statusCode).json(error.message)
+		: res.status(500).send(error.message);
 });

@@ -20,9 +20,9 @@ export type TUserMoreInfoDTO = {
 
 export type TUserExitDataDTO = {
 	_id: TId;
-	createdAt: Date,
-	updatedAt: Date,
-	userMoreInfo: { _id: TId } & TUserMoreInfoDTO | undefined;
+	createdAt: Date;
+	updatedAt: Date;
+	userMoreInfo: Omit<TUserExitDataDTO, "userId"> | null;
 } & TCreateUserDTO;
 
 export type TEditUserDTO = {
@@ -30,12 +30,10 @@ export type TEditUserDTO = {
 	name?: string;
 	email?: string;
 	password?: string;
-	userMoreInfo?: {
-		phone?: string;
-		zipCode?: string;
-		address?: string;
-		city?: string;
-		state?: string;
-		country?: string;
-	};
+	phone?: string;
+	zipCode?: string;
+	address?: string;
+	city?: string;
+	state?: string;
+	country?: string;
 };

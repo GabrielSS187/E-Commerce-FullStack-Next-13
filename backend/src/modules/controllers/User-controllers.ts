@@ -111,7 +111,9 @@ export class UserControllers {
 			password,
 		});
 
-		return res.status(result.statusCode).json(result.token);
+		return res.status(result.statusCode).json({
+			access_token: result.access_token 
+		});
 	}
 
 	async findByToken(req: Request, res: Response): Promise<Response> {
