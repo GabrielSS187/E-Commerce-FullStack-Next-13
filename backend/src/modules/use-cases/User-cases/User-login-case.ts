@@ -38,7 +38,7 @@ export class UserLoginCase {
 
 			return {
 				statusCode: 200,
-				token: generateTokenJwt,
+				access_token: generateTokenJwt,
 			};
 			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
