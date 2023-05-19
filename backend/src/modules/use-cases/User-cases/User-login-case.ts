@@ -40,7 +40,6 @@ export class UserLoginCase {
 				statusCode: 200,
 				access_token: generateTokenJwt,
 			};
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			if (error instanceof ZodError) {
 				throw new UserError(error.issues[0].message, 406);

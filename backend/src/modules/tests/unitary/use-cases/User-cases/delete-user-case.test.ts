@@ -41,7 +41,6 @@ describe("Test in the file delete-user-case", () => {
 		try {
 			await sutDeleteUserCase.delete({ idUser: "id_not_exist" });
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).instanceOf(UserError);
 			expect(error.message).toBe("Usuário não encontrado.");

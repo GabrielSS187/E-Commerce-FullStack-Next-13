@@ -31,7 +31,6 @@ describe("Tests in the file Create-user-case.", () => {
 		vi.restoreAllMocks();
 	});
 
-	// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const newUser: any = {
 		name: "Test Silva",
 		email: "test@test.com",
@@ -78,7 +77,6 @@ describe("Tests in the file Create-user-case.", () => {
 		try {
 			await sutCreateUserCase.create(newUser);
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).toBeInstanceOf(UserError);
 			expect(error.message).toBe(
@@ -98,7 +96,6 @@ describe("Tests in the file Create-user-case.", () => {
 		try {
 			await sutCreateUserCase.create(newUser);
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).toBeInstanceOf(UserError);
 			expect(error.message).toBe("Email obrigatório.");
@@ -117,7 +114,6 @@ describe("Tests in the file Create-user-case.", () => {
 		try {
 			await sutCreateUserCase.create(newUser);
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).toBeInstanceOf(UserError);
 			expect(error.message).toBe("Email invalido.");
@@ -137,7 +133,6 @@ describe("Tests in the file Create-user-case.", () => {
 		try {
 			await sutCreateUserCase.create(newUser);
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).instanceOf(UserError);
 			expect(error.message).toBe(
@@ -159,7 +154,6 @@ describe("Tests in the file Create-user-case.", () => {
 		try {
 			await sutCreateUserCase.create(newUser);
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).instanceOf(UserError);
 			expect(error.message).toBe(
@@ -181,7 +175,6 @@ describe("Tests in the file Create-user-case.", () => {
 		try {
 			await sutCreateUserCase.create(newUser);
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).instanceOf(UserError);
 			expect(error.message).toBe(
@@ -203,7 +196,6 @@ describe("Tests in the file Create-user-case.", () => {
 		try {
 			await sutCreateUserCase.create(newUser);
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).instanceOf(UserError);
 			expect(error.message).toBe(
@@ -225,7 +217,6 @@ describe("Tests in the file Create-user-case.", () => {
 		try {
 			await sutCreateUserCase.create(newUser);
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).instanceOf(UserError);
 			expect(error.message).toBe(
@@ -248,7 +239,6 @@ describe("Tests in the file Create-user-case.", () => {
 		try {
 			await sutCreateUserCase.create(newUser);
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).instanceOf(UserError);
 			expect(error.message).toBe("Esse número de celular não é valido.");
@@ -265,7 +255,6 @@ describe("Tests in the file Create-user-case.", () => {
 		try {
 			await sutCreateUserCase.create(newUser);
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).instanceOf(UserError);
 			expect(error.message).toBe("Cep invalido.");
@@ -282,7 +271,6 @@ describe("Tests in the file Create-user-case.", () => {
 		try {
 			await sutCreateUserCase.create(newUser);
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).instanceOf(UserError);
 			expect(error.message).toBe("Estado o máximo de caracteres é 2.");
@@ -299,7 +287,6 @@ describe("Tests in the file Create-user-case.", () => {
 		try {
 			await sutCreateUserCase.create(newUser);
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).instanceOf(UserError);
 			expect(error.message).toBe("País o mínimo de caracteres é 2.");
@@ -316,7 +303,6 @@ describe("Tests in the file Create-user-case.", () => {
 		try {
 			await sutCreateUserCase.create(newUser);
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).instanceOf(UserError);
 			expect(error.message).toBe("Endereço obrigatório.");

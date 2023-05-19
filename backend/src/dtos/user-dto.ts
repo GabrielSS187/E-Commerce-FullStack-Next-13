@@ -18,11 +18,13 @@ export type TUserMoreInfoDTO = {
 	country: string;
 };
 
+export type TMoreInfoDTO = Omit<TUserMoreInfoDTO, "userId"> | null;
+
 export type TUserExitDataDTO = {
 	_id: TId;
 	createdAt: Date;
 	updatedAt: Date;
-	userMoreInfo: Omit<TUserExitDataDTO, "userId"> | null;
+	userMoreInfo: TMoreInfoDTO;
 } & TCreateUserDTO;
 
 export type TEditUserDTO = {

@@ -77,7 +77,6 @@ export class EditInfoUserCase {
 				statusCode: 200,
 				message: "Informações editadas com sucesso.",
 			};
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			if (error instanceof ZodError) {
 				throw new UserError(error.issues[0].message, 406);

@@ -36,7 +36,6 @@ const sutFactory = () => {
 describe("Test in the file User-login-case.", () => {
 	const { bcrypt, jwt, sutUserLoginCase, sutCreateUserCase } = sutFactory();
 
-	// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const newUserData: any = {
 		name: "Test Silva",
 		email: "test@test.com",
@@ -49,7 +48,6 @@ describe("Test in the file User-login-case.", () => {
 		zipCode: "55555555",
 	};
 
-	// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const dataUser: any = {
 		email: "test@test.com",
 		password: "12345bB/",
@@ -65,7 +63,7 @@ describe("Test in the file User-login-case.", () => {
 
 		expect(result).toEqual({
 			statusCode: 200,
-			token: "jwtToken",
+			access_token: "jwtToken",
 		});
 		expect(mockJwt).toHaveBeenCalledOnce();
 		expect(mockBcrypt).toHaveBeenCalledOnce();
@@ -85,7 +83,6 @@ describe("Test in the file User-login-case.", () => {
 		try {
 			await sutUserLoginCase.login(dataUser);
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).instanceOf(UserError);
 			expect(error.message).toBe("Usuário não encontrado.");
@@ -111,7 +108,6 @@ describe("Test in the file User-login-case.", () => {
 		try {
 			await sutUserLoginCase.login(dataUser);
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).instanceOf(UserError);
 			expect(error.message).toBe("Senha incorreta.");
@@ -136,7 +132,6 @@ describe("Test in the file User-login-case.", () => {
 		try {
 			await sutUserLoginCase.login(dataUser);
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).instanceOf(UserError);
 			expect(error.message).toBe("Email invalido.");
@@ -162,7 +157,6 @@ describe("Test in the file User-login-case.", () => {
 		try {
 			await sutUserLoginCase.login(dataUser);
 			throw new Error("Test failed");
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			expect(error).instanceOf(UserError);
 			expect(error.message).toBe("Senha obrigatória.");

@@ -20,7 +20,6 @@ export class FindUserByTokenCase {
 				statusCode: 200,
 				user,
 			};
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			if (error instanceof JsonWebTokenError) {
 				throw new UserError(error.message, 401);

@@ -1,20 +1,8 @@
 import { ZodError } from "zod";
 import { UserContract } from "../../repositories/User-contract";
 import { BCryptContract } from "../../../infra/adapters/Bcrypt-contract";
-import { createUserSchema } from "./schemas";
+import { createUserSchema, TCreateUserRequest } from "./schemas";
 import { UserError } from "../../errors/User-error";
-
-type TRequest = {
-  name: string;
-  email: string;
-  password: string;
-  address: string;
-  city: string;
-  country: string;
-  phone: string;
-  state: string;
-  zipCode: string;
-};
 
 export class CreateUserCase {
   constructor(
@@ -22,7 +10,7 @@ export class CreateUserCase {
     private readonly bcrypt: BCryptContract
   ) {}
 
-  async create(request: TRequest) {
+  async create(request: TCreateUserRequest) {
     try {
       const {
         photo_url,
@@ -59,7 +47,6 @@ export class CreateUserCase {
       const newUserEmail = await this.userContract.findUser({ email });
 
       await this.userContract.createMoreInfo({
-        // rome-ignore lint/style/noNonNullAssertion: <explanation>
         userId: newUserEmail!._id,
         address,
         city,
@@ -73,7 +60,6 @@ export class CreateUserCase {
         message: "Usuário criado com sucesso.",
         statusCode: 201,
       };
-      // rome-ignore lint/suspicious/noExplicitAny: <explanation>
     } catch (error: any) {
       if (error instanceof ZodError) {
         throw new UserError(error.issues[0].message, 406);

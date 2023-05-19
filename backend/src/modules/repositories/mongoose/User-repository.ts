@@ -4,6 +4,7 @@ import {
   TUserMoreInfoDTO,
   TEditUserDTO,
   TUserExitDataDTO,
+  TMoreInfoDTO,
 } from "../../../dtos/user-dto";
 import { UserContract } from "../User-contract";
 
@@ -49,7 +50,7 @@ export class UserRepository implements UserContract {
 
     const moreInfo = await UserMoreInfoSchema.findOne({ userId: user?._id })
       .select("-__v -userId -_id")
-      .lean<TUserExitDataDTO>()
+      .lean<TMoreInfoDTO>()
       .exec();
 
     if (!user) {
